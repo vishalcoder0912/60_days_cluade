@@ -1,0 +1,24 @@
+# Dependencies
+**/node_modules/
+
+# Environment & secrets
+**/.env
+**/.env.local
+
+# Database
+**/*.db
+
+# User uploads
+**/uploads/
+
+# Build artifacts
+**/.next/
+**/__pycache__/
+**/*.pyc
+
+# Cache
+**/graphify-out/
+
+# OS files
+Thumbs.db
+.DS_Store
