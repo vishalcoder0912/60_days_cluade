@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AI Job Search Assistant — Indeed</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9f9f9; color: #1a1a1a; min-height: 100vh; }
+
+  .app { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  .hero { margin-bottom: 1.5rem; }
+  .hero-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; color: #888; text-transform: uppercase; margin-bottom: 6px; }
+  .hero-title { font-size: 24px; font-weight: 600; color: #111; line-height: 1.3; }
+  .hero-sub { font-size: 14px; color: #555; margin-top: 6px; }
+
+  .tab-bar { display: flex; gap: 4px; border-bottom: 1px solid #e5e5e5; margin-bottom: 1.5rem; }
+  .tab { padding: 8px 16px; font-size: 13px; font-weight: 400; color: #666; cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.15s; }
+  .tab.active { color: #111; font-weight: 600; border-bottom-color: #111; }
+  .tab:hover:not(.active) { color: #333; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .field-row.three { grid-template-columns: 1fr 1fr 1fr; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 12px; font-weight: 500; color: #555; }
+  input, select, textarea {
+    width: 100%; font-family: inherit; font-size: 14px;
+    padding: 8px 10px; border: 1px solid #ddd; border-radius: 8px;
+    background: #fff; color: #111; outline: none;
+    transition: border-color 0.15s;
+  }
+  input:focus, select:focus, textarea:focus { border-color: #888; }
+  textarea { resize: vertical; min-height: 90px; }
+
+  .search-btn { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-primary {
+    background: #111; color: #fff; border: none; border-radius: 8px;
+    padding: 9px 20px; font-size: 14px; font-weight: 500; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-secondary {
+    background: transparent; color: #111; border: 1px solid #ddd;
+    border-radius: 8px; padding: 9px 20px; font-size: 14px; font-weight: 400;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    transition: background 0.1s;
+  }
+  .btn-secondary:hover { background: #f0f0f0; }
+
+  .btn-sm {
+    font-size: 12px; padding: 5px 12px; border-radius: 6px;
+    cursor: pointer; border: 1px solid #ddd; background: #fff;
+    color: #333; transition: background 0.1s;
+  }
+  .btn-sm:hover { background: #f0f0f0; }
+  .btn-sm.primary { background: #111; color: #fff; border-color: #111; }
+  .btn-sm.primary:hover { opacity: 0.85; }
+
+  .results-area { margin-top: 1.5rem; }
+
+  .job-card {
+    background: #fff; border: 1px solid #e8e8e8; border-radius: 12px;
+    padding: 1rem 1.25rem; margin-bottom: 10px; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .job-card:hover { border-color: #bbb; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .job-title { font-size: 15px; font-weight: 600; color: #111; margin-bottom: 3px; }
+  .job-company { font-size: 13px; color: #555; }
+  .job-meta { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .badge {
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    background: #f0f0f0; color: #555;
+  }
+  .badge.remote { background: #e6f4ea; color: #1e7e34; }
+  .badge.salary { background: #fff3e0; color: #b45309; }
+  .badge.new { background: #e8f0fe; color: #1a56db; }
+  .job-summary { font-size: 13px; color: #555; line-height: 1.6; margin-top: 8px; }
+  .job-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+  .company-card {
+    background: #fff; border: 1px solid #e8e8e8; border-radius: 12px;
+    padding: 1.25rem; margin-bottom: 10px;
+  }
+  .company-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .company-avatar {
+    width: 48px; height: 48px; border-radius: 10px;
+    background: #e8f0fe; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 18px; color: #1a56db; flex-shrink: 0;
+  }
+  .company-name { font-size: 17px; font-weight: 600; }
+  .company-location { font-size: 13px; color: #666; margin-top: 2px; }
+  .rating-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
+  .rating-item { display: flex; flex-direction: column; gap: 3px; }
+  .rating-label { font-size: 11px; color: #888; }
+  .rating-val { font-size: 18px; font-weight: 600; }
+  .stars { color: #f59e0b; font-size: 13px; }
+
+  .info-block { background: #f9f9f9; border-radius: 10px; padding: 1rem; margin-top: 12px; }
+  .info-block h4 { font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #333; }
+  .info-block p { font-size: 13px; color: #555; line-height: 1.6; }
+
+  .cl-output {
+    background: #f9f9f9; border-radius: 12px; padding: 1.25rem;
+    font-size: 14px; line-height: 1.8; color: #222; white-space: pre-wrap;
+    margin-top: 1rem; border: 1px solid #e8e8e8;
+  }
+  .cl-actions { display: flex; gap: 8px; margin-top: 10px; }
+
+  .loading {
+    display: flex; align-items: center; gap: 10px;
+    color: #666; font-size: 14px; padding: 2.5rem 0;
+  }
+  .spinner {
+    width: 18px; height: 18px; border: 2px solid #ddd;
+    border-top-color: #555; border-radius: 50%;
+    animation: spin 0.7s linear infinite; flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty { text-align: center; padding: 3rem 1rem; color: #aaa; font-size: 14px; }
+  .empty .icon { font-size: 36px; margin-bottom: 10px; opacity: 0.4; }
+
+  .quick-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; align-items: center; }
+  .chip {
+    font-size: 12px; padding: 5px 13px; border-radius: 20px;
+    border: 1px solid #ddd; background: #fff; cursor: pointer;
+    color: #555; transition: all 0.1s;
+  }
+  .chip:hover { background: #111; color: #fff; border-color: #111; }
+  .chip-label { font-size: 12px; color: #aaa; }
+
+  .result-count { font-size: 12px; color: #999; margin-bottom: 12px; }
+
+  hr { border: none; border-top: 1px solid #eee; margin: 1rem 0; }
+
+  .resume-block {
+    background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 1.25rem;
+  }
+  .resume-section { margin-bottom: 1rem; }
+  .resume-section h3 { font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.06em; color: #888; margin-bottom: 8px; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .skill-tag { font-size: 12px; padding: 4px 10px; border-radius: 20px;
+    background: #f0f0f0; color: #444; }
+
+  .error-msg { background: #fff3f3; border: 1px solid #fcc; border-radius: 8px;
+    padding: 10px 14px; font-size: 13px; color: #c00; margin-top: 1rem; }
+
+  @media (max-width: 560px) {
+    .field-row, .field-row.three { grid-template-columns: 1fr; }
+    .tab { padding: 8px 10px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hero">
+    <div class="hero-eyebrow">⚡ Powered by Indeed + Claude AI</div>
+    <div class="hero-title">AI Job Search Assistant</div>
+    <div class="hero-sub">Search live jobs, research companies & generate tailored cover letters — all in one place.</div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchTab('search')">🔍 Job Search</button>
+    <button class="tab" onclick="switchTab('company')">🏢 Company Intel</button>
+    <button class="tab" onclick="switchTab('coverletter')">📄 Cover Letter</button>
+    <button class="tab" onclick="switchTab('resume')">🪪 My Resume</button>
+  </div>
+
+  <!-- ── SEARCH TAB ── -->
+  <div id="tab-search" class="panel active">
+    <div class="field-row three">
+      <div class="field">
+        <label for="jobTitle">Job title / keywords</label>
+        <input type="text" id="jobTitle" placeholder="e.g. MERN Stack Developer" />
+      </div>
+      <div class="field">
+        <label for="jobLocation">Location</label>
+        <input type="text" id="jobLocation" placeholder="e.g. Noida Sector 62" />
+      </div>
+      <div class="field">
+        <label for="jobType">Job type</label>
+        <select id="jobType">
+          <option value="">Any type</option>
+          <option value="fulltime">Full-time</option>
+          <option value="parttime">Part-time</option>
+          <option value="contract">Contract</option>
+          <option value="internship">Internship</option>
+          <option value="temporary">Temporary</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="quick-chips">
+      <span class="chip-label">Quick:</span>
+      <span class="chip" onclick="quickSearch('MERN Stack', 'Delhi')">MERN Stack · Delhi</span>
+      <span class="chip" onclick="quickSearch('Full Stack', 'Noida Sector 62')">Full Stack · Noida</span>
+      <span class="chip" onclick="quickSearch('Data Scientist', 'Remote')">Data Scientist · Remote</span>
+      <span class="chip" onclick="quickSearch('Product Manager', 'Bangalore')">Product Manager · Bangalore</span>
+    </div>
+
+    <div class="search-btn">
+      <button class="btn-primary" onclick="doSearch()">🔍 Search Jobs</button>
+      <button class="btn-secondary" onclick="clearSearch()">✕ Clear</button>
+    </div>
+
+    <div class="results-area" id="searchResults">
+      <div class="empty">
+        <div class="icon">💼</div>
+        Search for jobs to see live results here
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COMPANY TAB ── -->
+  <div id="tab-company" class="panel">
+    <div class="field-row">
+      <div class="field">
+        <label for="companyName">Company name</label>
+        <input type="text" id="companyName" placeholder="e.g. Infosys, TCS, Google India" />
+      </div>
+      <div class="field">
+        <label for="companyRole">Role you're applying for</label>
+        <input type="text" id="companyRole" placeholder="e.g. Software Engineer" />
+      </div>
+    </div>
+    <div class="search-btn">
+      <button class="btn-primary" onclick="doCompanyResearch()">🏢 Research Company</button>
+    </div>
+    <div class="results-area" id="companyResults">
+      <div class="empty">
+        <div class="icon">🏢</div>
+        Enter a company to see ratings, culture scores & salary insights
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COVER LETTER TAB ── -->
+  <div id="tab-coverletter" class="panel">
+    <div class="field-row">
+      <div class="field">
+        <label for="clJobTitle">Job title</label>
+        <input type="text" id="clJobTitle" placeholder="e.g. Senior MERN Stack Developer" />
+      </div>
+      <div class="field">
+        <label for="clCompany">Company name</label>
+        <input type="text" id="clCompany" placeholder="e.g. Birkenstock India" />
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:10px;">
+      <label for="clHighlights">Your key strengths / experience highlights</label>
+      <textarea id="clHighlights" placeholder="e.g. 4 years React/Node.js, built e-commerce platform with 50k users, led team of 5..."></textarea>
+    </div>
+    <div class="field" style="margin-bottom:10px;">
+      <label for="clJobDesc">Job description / key requirements (paste here)</label>
+      <textarea id="clJobDesc" placeholder="Paste the job description or key requirements from the listing..."></textarea>
+    </div>
+    <div class="field" style="margin-bottom:10px;">
+      <label for="clTone">Tone</label>
+      <select id="clTone">
+        <option value="professional">Professional</option>
+        <option value="confident and concise">Confident & Concise</option>
+        <option value="enthusiastic">Enthusiastic</option>
+        <option value="formal">Formal</option>
+      </select>
+    </div>
+    <div class="search-btn">
+      <button class="btn-primary" onclick="doCoverLetter()">✍️ Generate Cover Letter</button>
+      <button class="btn-secondary" onclick="clearCoverLetter()">✕ Clear</button>
+    </div>
+    <div id="clResult" class="results-area">
+      <div class="empty">
+        <div class="icon">📄</div>
+        Fill in the details above to generate a tailored cover letter
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RESUME TAB ── -->
+  <div id="tab-resume" class="panel">
+    <div id="resumeArea">
+      <div class="empty">
+        <div class="icon">🪪</div>
+        Click below to load your Indeed resume
+      </div>
+    </div>
+    <div class="search-btn" style="margin-top:1rem;">
+      <button class="btn-primary" onclick="loadResume()">📥 Load My Indeed Resume</button>
+    </div>
+    <div id="resumeActions" style="display:none; margin-top:10px; display:none;">
+      <hr>
+      <div class="search-btn">
+        <button class="btn-secondary" onclick="getJobSuggestions()">💡 Job suggestions from my resume</button>
+        <button class="btn-secondary" onclick="getSkillsGap()">📊 Skills gap analysis</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── State ───────────────────────────────────────────────────────────────────
+const API_URL = "https://api.anthropic.com/v1/messages";
+const INDEED_MCP = { type: "url", url: "https://mcp.indeed.com/claude/mcp", name: "indeed-mcp" };
+let resumeData = null;
+
+// ─── Tabs ────────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const tabs = ['search','company','coverletter','resume'];
+  document.querySelectorAll('.tab')[tabs.indexOf(tab)].classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ─── Quick Search ─────────────────────────────────────────────────────────────
+function quickSearch(title, location) {
+  document.getElementById('jobTitle').value = title;
+  document.getElementById('jobLocation').value = location;
+  doSearch();
+}
+
+function clearSearch() {
+  document.getElementById('jobTitle').value = '';
+  document.getElementById('jobLocation').value = '';
+  document.getElementById('jobType').value = '';
+  document.getElementById('searchResults').innerHTML = `
+    <div class="empty"><div class="icon">💼</div>Search for jobs to see live results here</div>`;
+}
+
+// ─── API Call ─────────────────────────────────────────────────────────────────
+async function callClaude(prompt, targetEl, onSuccess) {
+  targetEl.innerHTML = `<div class="loading"><div class="spinner"></div> Fetching from Indeed…</div>`;
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }],
+        mcp_servers: [INDEED_MCP]
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const text = data.content.filter(b => b.type === "text").map(b => b.text).join("\n");
+    onSuccess(text, data);
+  } catch (err) {
+    targetEl.innerHTML = `<div class="error-msg">⚠️ ${err.message || "Something went wrong. Please try again."}</div>`;
+  }
+}
+
+// ─── Job Search ───────────────────────────────────────────────────────────────
+async function doSearch() {
+  const title = document.getElementById('jobTitle').value.trim();
+  const location = document.getElementById('jobLocation').value.trim();
+  const type = document.getElementById('jobType').value;
+  const el = document.getElementById('searchResults');
+
+  if (!title || !location) {
+    el.innerHTML = `<div class="error-msg">⚠️ Please enter a job title and location.</div>`;
+    return;
+  }
+
+  const prompt = `Search Indeed for "${title}" jobs in "${location}"${type ? ` with job type "${type}"` : ""}. 
+Return results as a JSON array (no markdown, no extra text) with this shape:
+[{ "title": "", "company": "", "location": "", "type": "", "salary": "", "url": "", "summary": "", "tags": [] }]
+Include up to 8 results. Populate all fields as best you can from the Indeed data.`;
+
+  await callClaude(prompt, el, (text) => {
+    try {
+      const clean = text.replace(/```json|```/g, '').trim();
+      const jobs = JSON.parse(clean);
+      renderJobs(jobs, el, title);
+    } catch {
+      // fallback: render raw text
+      el.innerHTML = `<div class="cl-output">${text}</div>`;
+    }
+  });
+}
+
+function renderJobs(jobs, el, query) {
+  if (!jobs.length) {
+    el.innerHTML = `<div class="empty"><div class="icon">🔎</div>No results found. Try a different search.</div>`;
+    return;
+  }
+  el.innerHTML = `<div class="result-count">${jobs.length} result${jobs.length > 1 ? 's' : ''} for <strong>${query}</strong></div>`;
+  jobs.forEach((j, i) => {
+    const tags = (j.tags || []).map(t => `<span class="badge">${t}</span>`).join('');
+    const salary = j.salary ? `<span class="badge salary">💰 ${j.salary}</span>` : '';
+    const remote = (j.tags || []).some(t => /remote/i.test(t)) ? `<span class="badge remote">🌐 Remote</span>` : '';
+    el.innerHTML += `
+      <div class="job-card">
+        <div class="job-title">${j.title}</div>
+        <div class="job-company">${j.company} · ${j.location}</div>
+        <div class="job-meta">
+          ${j.type ? `<span class="badge">${j.type}</span>` : ''}
+          ${salary}${remote}${tags}
+        </div>
+        <div class="job-summary">${j.summary}</div>
+        <div class="job-actions">
+          ${j.url ? `<a href="${j.url}" target="_blank"><button class="btn-sm primary">Apply ↗</button></a>` : ''}
+          <button class="btn-sm" onclick="prefillCoverLetter('${esc(j.title)}','${esc(j.company)}')">✍️ Cover letter</button>
+        </div>
+      </div>`;
+  });
+}
+
+// ─── Company Research ─────────────────────────────────────────────────────────
+async function doCompanyResearch() {
+  const name = document.getElementById('companyName').value.trim();
+  const role = document.getElementById('companyRole').value.trim();
+  const el = document.getElementById('companyResults');
+  if (!name) {
+    el.innerHTML = `<div class="error-msg">⚠️ Please enter a company name.</div>`;
+    return;
+  }
+
+  const prompt = `Look up "${name}" on Indeed${role ? ` for the role "${role}"` : ''}.
+Return a JSON object (no markdown, no extra text):
+{ "name": "", "location": "", "rating": 0, "culture": 0, "worklife": 0, "management": 0, "salary_range": "", "review_summary": "", "pros": "", "cons": "" }
+Use data from Indeed company profiles. Ratings are out of 5.`;
+
+  await callClaude(prompt, el, (text) => {
+    try {
+      const clean = text.replace(/```json|```/g, '').trim();
+      const c = JSON.parse(clean);
+      renderCompany(c, el, role);
+    } catch {
+      el.innerHTML = `<div class="cl-output">${text}</div>`;
+    }
+  });
+}
+
+function renderCompany(c, el, role) {
+  const star = (n) => '★'.repeat(Math.round(n || 0)) + '☆'.repeat(5 - Math.round(n || 0));
+  el.innerHTML = `
+    <div class="company-card">
+      <div class="company-header">
+        <div class="company-avatar">${(c.name||'?')[0].toUpperCase()}</div>
+        <div>
+          <div class="company-name">${c.name}</div>
+          <div class="company-location">${c.location || ''}</div>
+          ${role ? `<div style="font-size:12px;color:#888;margin-top:2px;">Role: ${role}</div>` : ''}
+        </div>
+      </div>
+      <div class="rating-row">
+        <div class="rating-item"><div class="rating-label">Overall</div><div class="rating-val">${c.rating || '—'}</div><div class="stars">${star(c.rating)}</div></div>
+        <div class="rating-item"><div class="rating-label">Culture</div><div class="rating-val">${c.culture || '—'}</div><div class="stars">${star(c.culture)}</div></div>
+        <div class="rating-item"><div class="rating-label">Work-Life</div><div class="rating-val">${c.worklife || '—'}</div><div class="stars">${star(c.worklife)}</div></div>
+        <div class="rating-item"><div class="rating-label">Management</div><div class="rating-val">${c.management || '—'}</div><div class="stars">${star(c.management)}</div></div>
+      </div>
+      ${c.salary_range ? `<div class="info-block"><h4>💰 Salary Range${role ? ` — ${role}` : ''}</h4><p>${c.salary_range}</p></div>` : ''}
+      ${c.review_summary ? `<div class="info-block"><h4>📊 Employee Sentiment</h4><p>${c.review_summary}</p></div>` : ''}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+        ${c.pros ? `<div class="info-block"><h4>👍 Pros</h4><p>${c.pros}</p></div>` : ''}
+        ${c.cons ? `<div class="info-block"><h4>👎 Cons</h4><p>${c.cons}</p></div>` : ''}
+      </div>
+    </div>`;
+}
+
+// ─── Cover Letter ─────────────────────────────────────────────────────────────
+function prefillCoverLetter(title, company) {
+  document.getElementById('clJobTitle').value = title;
+  document.getElementById('clCompany').value = company;
+  switchTab('coverletter');
+  document.getElementById('clHighlights').focus();
+}
+
+function clearCoverLetter() {
+  ['clJobTitle','clCompany','clHighlights','clJobDesc'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('clResult').innerHTML = `
+    <div class="empty"><div class="icon">📄</div>Fill in the details above to generate a tailored cover letter</div>`;
+}
+
+async function doCoverLetter() {
+  const jobTitle = document.getElementById('clJobTitle').value.trim();
+  const company  = document.getElementById('clCompany').value.trim();
+  const highlights = document.getElementById('clHighlights').value.trim();
+  const jobDesc  = document.getElementById('clJobDesc').value.trim();
+  const tone     = document.getElementById('clTone').value;
+  const el = document.getElementById('clResult');
+
+  if (!jobTitle || !company) {
+    el.innerHTML = `<div class="error-msg">⚠️ Please enter the job title and company name.</div>`;
+    return;
+  }
+
+  el.innerHTML = `<div class="loading"><div class="spinner"></div> Writing your cover letter…</div>`;
+
+  const prompt = `Write a ${tone} cover letter for a "${jobTitle}" position at "${company}".
+${highlights ? `Candidate highlights: ${highlights}` : ''}
+${jobDesc ? `Key job requirements: ${jobDesc}` : ''}
+Guidelines: under 300 words, no clichés, specific and compelling. Output ONLY the cover letter text, no extra commentary.`;
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const letter = data.content.filter(b => b.type === "text").map(b => b.text).join("\n");
+    el.innerHTML = `
+      <div class="cl-output" id="clText">${letter}</div>
+      <div class="cl-actions">
+        <button class="btn-sm primary" onclick="copyLetter()">📋 Copy to clipboard</button>
+        <button class="btn-sm" onclick="doCoverLetter()">🔄 Regenerate</button>
+      </div>`;
+  } catch (err) {
+    el.innerHTML = `<div class="error-msg">⚠️ ${err.message || "Something went wrong."}</div>`;
+  }
+}
+
+function copyLetter() {
+  const txt = document.getElementById('clText')?.innerText || '';
+  navigator.clipboard.writeText(txt).then(() => alert('✅ Cover letter copied to clipboard!'));
+}
+
+// ─── Resume ───────────────────────────────────────────────────────────────────
+async function loadResume() {
+  const el = document.getElementById('resumeArea');
+  el.innerHTML = `<div class="loading"><div class="spinner"></div> Loading your Indeed resume…</div>`;
+
+  const prompt = `Fetch my Indeed resume. Return a JSON object (no markdown, no extra text):
+{ "name": "", "title": "", "summary": "", "skills": [], "experience": [{ "role": "", "company": "", "duration": "", "highlights": "" }], "education": [{ "degree": "", "institution": "", "year": "" }] }`;
+
+  await callClaude(prompt, el, (text) => {
+    try {
+      const clean = text.replace(/```json|```/g, '').trim();
+      resumeData = JSON.parse(clean);
+      renderResume(resumeData, el);
+      document.getElementById('resumeActions').style.display = 'block';
+    } catch {
+      el.innerHTML = `<div class="cl-output">${text}</div>`;
+    }
+  });
+}
+
+function renderResume(r, el) {
+  const skills = (r.skills || []).map(s => `<span class="skill-tag">${s}</span>`).join('');
+  const exp = (r.experience || []).map(e => `
+    <div style="margin-bottom:10px;">
+      <div style="font-weight:600;font-size:14px;">${e.role} — ${e.company}</div>
+      <div style="font-size:12px;color:#888;margin:2px 0;">${e.duration}</div>
+      <div style="font-size:13px;color:#555;">${e.highlights}</div>
+    </div>`).join('');
+  const edu = (r.education || []).map(e => `
+    <div style="font-size:13px;color:#555;">${e.degree} · ${e.institution} ${e.year ? `(${e.year})` : ''}</div>`).join('');
+
+  el.innerHTML = `
+    <div class="resume-block">
+      <div style="margin-bottom:12px;">
+        <div style="font-size:18px;font-weight:700;">${r.name || '—'}</div>
+        <div style="font-size:14px;color:#555;">${r.title || ''}</div>
+        ${r.summary ? `<div style="font-size:13px;color:#666;margin-top:6px;line-height:1.6;">${r.summary}</div>` : ''}
+      </div>
+      ${skills ? `<div class="resume-section"><h3>Skills</h3><div class="skill-tags">${skills}</div></div>` : ''}
+      ${exp ? `<div class="resume-section"><h3>Experience</h3>${exp}</div>` : ''}
+      ${edu ? `<div class="resume-section"><h3>Education</h3>${edu}</div>` : ''}
+    </div>`;
+}
+
+function getJobSuggestions() {
+  const summary = resumeData ? JSON.stringify(resumeData).slice(0, 600) : 'my resume';
+  alert('💡 Tip: Switch to the Job Search tab and describe what you\'re looking for based on your resume skills!');
+}
+
+function getSkillsGap() {
+  alert('📊 Tip: Switch to the Cover Letter tab, paste a job description, and Claude will help identify what you need to highlight!');
+}
+
+// ─── Utils ────────────────────────────────────────────────────────────────────
+function esc(str) { return (str || '').replace(/'/g, "\\'").replace(/"/g, '\\"'); }
+</script>
+</body>
+</html>
