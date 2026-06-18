@@ -1,0 +1,483 @@
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 24px;
+    min-height: 100vh;
+    color: #1a1a1a;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .header {
+    background: white;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+  }
+
+  .header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #0d0d0d;
+  }
+
+  .header p {
+    font-size: 16px;
+    color: #666;
+  }
+
+  .section {
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .section h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #0d0d0d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .summary-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #444;
+  }
+
+  .key-takeaways {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .takeaway-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .takeaway-card strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+  }
+
+  th {
+    background: #f8f9fa;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    color: #0d0d0d;
+    border-bottom: 2px solid #e0e0e0;
+  }
+
+  td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+    color: #444;
+  }
+
+  tr:hover {
+    background: #f8f9fa;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .priority-high {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .priority-medium {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .priority-low {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .open-question {
+    background: #ede9fe;
+    color: #6d28d9;
+  }
+
+  .pending {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .risk-item, .question-item, .note-item {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border-left: 4px solid #667eea;
+  }
+
+  .risk-item {
+    border-left-color: #ef4444;
+  }
+
+  .question-item {
+    border-left-color: #f59e0b;
+  }
+
+  .note-item {
+    border-left-color: #3b82f6;
+  }
+
+  .item-title {
+    font-weight: 600;
+    color: #0d0d0d;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  .item-content {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .speaker-section {
+    margin-bottom: 24px;
+  }
+
+  .speaker-name {
+    font-weight: 700;
+    color: #667eea;
+    font-size: 16px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e0e0e0;
+  }
+
+  .speaker-item {
+    background: #f8f9fa;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #444;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding: 16px;
+    }
+
+    .header {
+      padding: 20px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+    }
+
+    .section {
+      padding: 20px;
+    }
+
+    .key-takeaways {
+      grid-template-columns: 1fr;
+    }
+
+    table {
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 10px 8px;
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="header">
+    <h1>Quarterly Growth Strategy Meeting</h1>
+    <p>Q2 Performance Review & Strategic Priorities</p>
+  </div>
+
+  <!-- Summary Section -->
+  <div class="section">
+    <h2>📋 Summary</h2>
+    <p class="summary-text">
+      Leadership reviewed Q2 performance against annual targets. Q2 revenue grew 12%, falling short of the 18% target due to enterprise deal slippage caused by procurement delays and additional security reviews. The meeting addressed conversion rate optimization, engineering capacity constraints, critical reporting performance issues affecting customer retention and sales, and budget approvals for website redesign and conference spending. Key decisions include deferring hiring plans, reprioritizing engineering work to address reporting performance, and avoiding public commitments on the August analytics dashboard release until engineering completes its milestone review.
+    </p>
+  </div>
+
+  <!-- Key Takeaways -->
+  <div class="section">
+    <h2>⚡ Key Takeaways</h2>
+    <div class="key-takeaways">
+      <div class="takeaway-card">
+        <strong>Revenue Miss</strong>
+        Q2 revenue 12% vs 18% target. 5 of 14 expected enterprise deals slipped to Q3 due to procurement delays and security reviews.
+      </div>
+      <div class="takeaway-card">
+        <strong>Reporting Performance is Critical</strong>
+        Dashboard loading times and reporting performance issues are driving customer complaints, impacting retention (currently 94%), and affecting sales calls.
+      </div>
+      <div class="takeaway-card">
+        <strong>Engineering at Capacity</strong>
+        Team is operating near capacity with analytics dashboard due August. Website redesign may require external contractors and cost impact unknown.
+      </div>
+      <div class="takeaway-card">
+        <strong>Lead Generation Improving</strong>
+        Website traffic up 34% YoY, but conversion rates remain lower than expected. Website redesign and simplified demo process planned.
+      </div>
+      <div class="takeaway-card">
+        <strong>Multiple Approval Holds</strong>
+        Customer conference budget pending vendor proposals. Hiring decisions postponed until Q3 forecast finalized. Analytics dashboard launch announcement deferred pending engineering milestone review.
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Items -->
+  <div class="section">
+    <h2>✅ Action Items</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Owner</th>
+          <th>Deadline</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Complete architecture review for website redesign</td>
+          <td>CTO</td>
+          <td>Not specified</td>
+          <td><span class="status-badge priority-high">🔴 High Priority</span></td>
+        </tr>
+        <tr>
+          <td>Provide cost estimate for website redesign (may require contractors)</td>
+          <td>CTO</td>
+          <td>Before spending approval</td>
+          <td><span class="status-badge priority-high">🔴 High Priority</span></td>
+        </tr>
+        <tr>
+          <td>Investigate and resolve reporting performance issues</td>
+          <td>CTO / Engineering</td>
+          <td>Not specified</td>
+          <td><span class="status-badge priority-high">🔴 High Priority</span></td>
+        </tr>
+        <tr>
+          <td>Complete engineering milestone review for analytics dashboard</td>
+          <td>CTO</td>
+          <td>Before public announcement</td>
+          <td><span class="status-badge priority-high">🔴 High Priority</span></td>
+        </tr>
+        <tr>
+          <td>Confirm August release date for analytics dashboard</td>
+          <td>CTO / Product Director</td>
+          <td>Not specified</td>
+          <td><span class="status-badge priority-high">🔴 High Priority</span></td>
+        </tr>
+        <tr>
+          <td>Finalize Q3 forecasts</td>
+          <td>CFO</td>
+          <td>Not specified</td>
+          <td><span class="status-badge priority-high">🔴 High Priority</span></td>
+        </tr>
+        <tr>
+          <td>Collect final vendor proposals for customer conference</td>
+          <td>CFO</td>
+          <td>Before next month's review</td>
+          <td><span class="status-badge priority-medium">🟠 Medium Priority</span></td>
+        </tr>
+        <tr>
+          <td>Plan website redesign and simplify demo-request process</td>
+          <td>VP Marketing</td>
+          <td>Not specified</td>
+          <td><span class="status-badge priority-medium">🟠 Medium Priority</span></td>
+        </tr>
+        <tr>
+          <td>Follow up on open items during next week's leadership meeting</td>
+          <td>CEO</td>
+          <td>Next week's meeting</td>
+          <td><span class="status-badge pending">⏳ Pending</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Open Questions -->
+  <div class="section">
+    <h2>❓ Open Questions</h2>
+    <div class="question-item">
+      <div class="item-title">When will the August analytics dashboard release date be confirmed?</div>
+      <div class="item-content">CTO stated inability to guarantee the August date. Engineering milestone review must be completed before any public announcement.</div>
+    </div>
+    <div class="question-item">
+      <div class="item-title">What is the cost estimate for website redesign including contractor resources?</div>
+      <div class="item-content">Architecture review not yet completed. Estimate needed before spending approval can be granted.</div>
+    </div>
+    <div class="question-item">
+      <div class="item-title">Will the 5 slipped enterprise deals close in Q3?</div>
+      <div class="item-content">Head of Sales indicated deals slipped but no specific timeline provided for rescheduled closures.</div>
+    </div>
+    <div class="question-item">
+      <div class="item-title">What is the timeline for resolving reporting performance issues?</div>
+      <div class="item-content">Issue acknowledged and investigation started, but no specific timeline given.</div>
+    </div>
+    <div class="question-item">
+      <div class="item-title">When will Q3 forecasts be finalized?</div>
+      <div class="item-content">Needed before hiring decisions can be made, but specific deadline not provided.</div>
+    </div>
+  </div>
+
+  <!-- Risks & Blockers -->
+  <div class="section">
+    <h2>⚠️ Risks & Blockers</h2>
+    <div class="risk-item">
+      <div class="item-title">Engineering Capacity Constraint</div>
+      <div class="item-content">Team operating near capacity with analytics dashboard. Website redesign may require external contractors and could delay other initiatives.</div>
+    </div>
+    <div class="risk-item">
+      <div class="item-title">Analytics Dashboard Release Date Uncertainty</div>
+      <div class="item-content">CTO cannot guarantee August release. Impacts ability to announce dashboard at customer conference and affects sales strategy.</div>
+    </div>
+    <div class="risk-item">
+      <div class="item-title">Reporting Performance Affecting Business</div>
+      <div class="item-content">Dashboard loading times and reporting performance issues are impacting customer retention (still at 94% but declining) and mentioned by prospects during sales calls. May require prioritization above other planned feature releases.</div>
+    </div>
+    <div class="risk-item">
+      <div class="item-title">Q3 Revenue Forecast Risk</div>
+      <div class="item-content">If the 5 slipped enterprise deals slip again, the company may miss annual revenue target. Procurement delays and security reviews are ongoing concerns.</div>
+    </div>
+    <div class="risk-item">
+      <div class="item-title">Website Redesign Cost Unknown</div>
+      <div class="item-content">No cost estimate available. CEO requires estimate before approving additional spending. Potential need for external contractors increases uncertainty.</div>
+    </div>
+    <div class="risk-item">
+      <div class="item-title">Conversion Rate Optimization Timeline Unclear</div>
+      <div class="item-content">Website redesign and demo-request simplification planned but no specific timeline provided. May compete with engineering resources allocated to reporting performance fixes.</div>
+    </div>
+  </div>
+
+  <!-- Conflicts -->
+  <div class="section">
+    <h2>⚠️ Conflicts & Dependencies</h2>
+    <div class="risk-item">
+      <div class="item-title">Engineering Prioritization Conflict</div>
+      <div class="item-content">Analytics dashboard (August release) vs. reporting performance fixes vs. website redesign. All three compete for limited engineering resources. Product Director notes reporting performance may have larger business impact than some planned feature releases.</div>
+    </div>
+    <div class="risk-item">
+      <div class="item-title">Hiring Plan Dependency</div>
+      <div class="item-content">Hiring decisions deferred until Q3 forecasts finalized. Conflicting headcount requests from departments cannot be resolved until forecast is complete.</div>
+    </div>
+    <div class="risk-item">
+      <div class="item-title">Conference Budget Approval Dependency</div>
+      <div class="item-content">Cannot approve conference budget until CFO receives final vendor proposals. Decision also depends on clarity regarding analytics dashboard announcement (which depends on engineering milestone review).</div>
+    </div>
+  </div>
+
+  <!-- Speaker Breakdown -->
+  <div class="section">
+    <h2>👥 Speaker Summary & Decisions</h2>
+
+    <div class="speaker-section">
+      <div class="speaker-name">CEO</div>
+      <div class="speaker-item"><strong>Key Decisions:</strong> Require cost estimate before approving website redesign spending. Defer hiring decisions until Q3 forecast finalized. Avoid public commitments on analytics dashboard until engineering completes milestone review. Revisit conference budget next month after proposals received.</div>
+      <div class="speaker-item"><strong>Focus:</strong> Accountability for missing Q2 revenue target, engineering constraints, and preventing further commitments without clear timelines.</div>
+    </div>
+
+    <div class="speaker-section">
+      <div class="speaker-name">Head of Sales</div>
+      <div class="speaker-item"><strong>Context Provided:</strong> 5 of 14 expected enterprise deals slipped to Q3. Primary cause: procurement delays and additional security reviews by clients. Reporting performance mentioned by prospects during sales calls.</div>
+      <div class="speaker-item"><strong>Actions:</strong> Tracking deal rescheduling. Reporting performance is now affecting sales conversations.</div>
+    </div>
+
+    <div class="speaker-section">
+      <div class="speaker-name">CFO</div>
+      <div class="speaker-item"><strong>Context Provided:</strong> Revenue forecast impacted by deal slippage. Needs clarity on hiring plan (conflicting department requests). Requires final vendor proposals for conference budget approval.</div>
+      <div class="speaker-item"><strong>Actions:</strong> Awaiting cost estimate for website redesign. Will collect vendor proposals and finalize Q3 forecasts.</div>
+    </div>
+
+    <div class="speaker-section">
+      <div class="speaker-name">VP Marketing</div>
+      <div class="speaker-item"><strong>Context Provided:</strong> Website traffic up 34% but conversion rates below target. Planning website redesign and simplification of demo-request process.</div>
+      <div class="speaker-item"><strong>Actions:</strong> Leading website redesign initiative. Requested approval for customer conference budget (approval dependent on CFO's vendor proposals).</div>
+    </div>
+
+    <div class="speaker-section">
+      <div class="speaker-name">Product Director</div>
+      <div class="speaker-item"><strong>Key Statement:</strong> Improving reporting performance may have larger business impact than some planned feature releases. Must be careful with website redesign timelines as engineering is at capacity. Analytics dashboard should only be announced if confident about August release date.</div>
+      <div class="speaker-item"><strong>Role:</strong> Advocating for reporting performance prioritization. Managing engineering timeline expectations.</div>
+    </div>
+
+    <div class="speaker-section">
+      <div class="speaker-name">CTO</div>
+      <div class="speaker-item"><strong>Key Statements:</strong> Engineering team operating near capacity. Architecture review for website redesign not completed. Cost estimate not available. Cannot guarantee August analytics dashboard release date.</div>
+      <div class="speaker-item"><strong>Actions:</strong> Complete architecture review and provide cost estimate for website redesign. Investigating reporting performance issues. Completing engineering milestone review for analytics dashboard.</div>
+    </div>
+
+    <div class="speaker-section">
+      <div class="speaker-name">Customer Success Lead</div>
+      <div class="speaker-item"><strong>Context Provided:</strong> Customer retention at 94% (still strong but potentially at risk). Support ticket volume increased significantly. Most complaints relate to reporting performance and dashboard loading times.</div>
+      <div class="speaker-item"><strong>Observation:</strong> Performance issues directly impacting customer satisfaction and support resource utilization.</div>
+    </div>
+  </div>
+
+  <!-- Additional Notes -->
+  <div class="section">
+    <h2>📝 Additional Notes</h2>
+    <div class="note-item">
+      <div class="item-title">Performance Issue Cross-Impact</div>
+      <div class="item-content">Reporting performance and dashboard loading time issues are cited as primary drivers of: increased customer support tickets, customer retention risk, sales prospect concerns during calls. This appears to be the single most critical operational issue affecting multiple business functions.</div>
+    </div>
+    <div class="note-item">
+      <div class="item-title">Q2 Target Miss Breakdown</div>
+      <div class="item-content">Q2 revenue 12% growth vs 18% target (6% shortfall). Gap primarily from 5 enterprise deals slipping from Q2 to Q3. Two root causes: procurement delays (primary) and client requests for additional security reviews.</div>
+    </div>
+    <div class="note-item">
+      <div class="item-title">Engineering Resource Allocation Challenge</div>
+      <div class="item-content">CTO's capacity assessment requires decisions across three competing priorities: (1) Analytics dashboard (August deadline), (2) Reporting performance fixes (highest business impact per Product Director), (3) Website redesign (supporting conversion rate improvement). May require external contractor resources.</div>
+    </div>
+    <div class="note-item">
+      <div class="item-title">Decision Deferral Items</div>
+      <div class="item-content">Multiple approvals and decisions deferred pending additional information: Website redesign spending (awaiting cost estimate), hiring plan (awaiting Q3 forecast), conference budget (awaiting vendor proposals), analytics dashboard announcement (awaiting engineering milestone review).</div>
+    </div>
+  </div>
+</div>
