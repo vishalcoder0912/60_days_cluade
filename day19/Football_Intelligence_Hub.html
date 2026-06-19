@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Intelligence Hub - World Cup 2026 Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 2em;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .emoji {
+            font-size: 1.2em;
+        }
+
+        .prediction-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .prediction-card h3 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .confidence-score {
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .prediction-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .prediction-content p {
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .prediction-content strong {
+            color: #667eea;
+        }
+
+        .prediction-content ul {
+            list-style-position: inside;
+            line-height: 1.8;
+        }
+
+        .prediction-content ul li {
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .player-card {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .player-name {
+            font-size: 1.3em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .player-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .player-details strong {
+            color: #333;
+        }
+
+        .player-description {
+            line-height: 1.6;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .quiz-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .quiz-question h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .quiz-option {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f0f2f5;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .quiz-option:hover {
+            background: #e0e2e5;
+            transform: translateX(5px);
+        }
+
+        .quiz-option input {
+            margin-right: 10px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .score-display h3 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .score-display p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .personality-match {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .personality-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border-top: 4px solid #667eea;
+        }
+
+        .personality-box h4 {
+            color: #667eea;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .match-score {
+            font-size: 2.5em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .personality-traits {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+
+        .personality-traits ul {
+            list-style-position: inside;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .archetype-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 5px solid #e17055;
+        }
+
+        .archetype-box h4 {
+            color: #d63031;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .archetype-box p {
+            color: #2d3436;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .recommendations {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .recommendation-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+            text-align: center;
+        }
+
+        .recommendation-item h5 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+            text-transform: uppercase;
+        }
+
+        .recommendation-item p {
+            color: #555;
+            font-weight: bold;
+        }
+
+        .key-insights {
+            background: linear-gradient(135deg, #e0f7ff 0%, #f0e5ff 100%);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+            margin-bottom: 25px;
+        }
+
+        .key-insights h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .insight-item {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            border-left: 3px solid #667eea;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .profile-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .profile-title {
+            font-size: 1.4em;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .profile-content {
+            line-height: 1.8;
+            color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 4px solid #c62828;
+        }
+
+        @media (max-width: 768px) {
+            .prediction-content {
+                grid-template-columns: 1fr;
+            }
+
+            .personality-match {
+                grid-template-columns: 1fr;
+            }
+
+            .recommendations {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .section-title {
+                font-size: 1.5em;
+            }
+
+            .prediction-card h3 {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚽ Football Intelligence Hub</h1>
+            <p>FIFA World Cup 2026 Analysis & Personality Assessment</p>
+        </div>
+
+        <div class="content">
+            <!-- STAGE 1: WORLD CUP 2026 PREDICTION -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="emoji">🏆</span>
+                    STAGE 1: FIFA WORLD CUP 2026 PREDICTION REPORT
+                </div>
+
+                <div class="prediction-card">
+                    <h3>
+                        🥇 MOST LIKELY WINNER: ARGENTINA
+                        <span class="confidence-score">92% Confidence</span>
+                    </h3>
+                    <div class="prediction-content">
+                        <div>
+                            <strong>Why Argentina?</strong>
+                            <ul>
+                                <li><strong>Historical Strength:</strong> 68% win rate — one of the best in the world. 34 wins in 50 matches</li>
+                                <li><strong>Current Form:</strong> Ranked #1 globally with 8 recent wins, only 1 draw, 1 loss (Form Score: 92)</li>
+                                <li><strong>Tournament Performance:</strong> Dominated Algeria 3-0. Leading Group J</li>
+                                <li><strong>Star Power:</strong> Lionel Messi at 96 rating — highest in tournament with 20 goals</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong>Supporting Evidence</strong>
+                            <ul>
+                                <li>Scored 22 goals, conceded only 6 in recent matches</li>
+                                <li>Won 2022 World Cup (most recent champions)</li>
+                                <li>Messi's leadership and experience crucial in knockout stages</li>
+                                <li>Strong defensive record historically</li>
+                            </ul>
+                            <strong style="display: block; margin-top: 15px;">Key Risks</strong>
+                            <ul>
+                                <li>Messi aging (will be 39 by tournament end)</li>
+                                <li>Potential injuries to key players</li>
+                                <li>Pressure as defending champions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prediction-card">
+                    <h3>
+                        🥈 RUNNER-UP (Second Place): FRANCE
+                        <span class="confidence-score">88% Confidence</span>
+                    </h3>
+                    <div class="prediction-content">
+                        <div>
+                            <strong>Why France?</strong>
+                            <ul>
+                                <li><strong>Proven Winners:</strong> Won 2018, finalist in 2022. 62% historical win rate</li>
+                                <li><strong>Current Strength:</strong> Ranked #3 with 7 recent wins, 2 draws, 1 loss (Form Score: 90)</li>
+                                <li><strong>Tournament Start:</strong> Defeated Senegal 2-0 convincingly</li>
+                                <li><strong>Young Superstar:</strong> Kylian Mbappe (22 goals, 95 rating) — elite attacker</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong>Supporting Evidence</strong>
+                            <ul>
+                                <li>21 goals scored, only 8 conceded recently</li>
+                                <li>Won 2018 World Cup (proven capability)</li>
+                                <li>Mbappe fastest rising star in football</li>
+                                <li>Deep squad with multiple talented players</li>
+                            </ul>
+                            <strong style="display: block; margin-top: 15px;">Key Risks</strong>
+                            <ul>
+                                <li>Likely face Argentina in later stages</li>
+                                <li>Injury to Mbappe would be critical</li>
+                                <li>Fatigue from club season</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prediction-card">
+                    <h3>
+                        ⭐ DARK HORSE: GERMANY
+                        <span class="confidence-score">72% Confidence</span>
+                    </h3>
+                    <div class="prediction-content">
+                        <div>
+                            <strong>Why Germany?</strong>
+                            <ul>
+                                <li><strong>Impressive Dominance:</strong> Crushed Curaçao 7-1 — biggest win so far. Leading Group E</li>
+                                <li><strong>Consistent Quality:</strong> 56% historical win rate. 85 goals in 50 pre-tournament matches</li>
+                                <li><strong>Recent Form:</strong> 6 recent wins, 2 draws, 2 losses (Form Score: 87)</li>
+                                <li><strong>Tournament Momentum:</strong> 7-1 victory shows dominance and creates psychological confidence</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong>Supporting Evidence</strong>
+                            <ul>
+                                <li>22 goals scored, 11 conceded recently</li>
+                                <li>Historical tournament pedigree (4-time World Cup winner)</li>
+                                <li>Strong attacking and defensive balance</li>
+                                <li>Psychological advantage from massive opening win</li>
+                            </ul>
+                            <strong style="display: block; margin-top: 15px;">Key Risks</strong>
+                            <ul>
+                                <li>Faced weaker opposition (Curaçao) in opening match</li>
+                                <li>Haven't won since 2014</li>
+                                <li>Recent tournament knockout stage weakness</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <h3 style="color: #667eea; margin-bottom: 20px;">👀 PLAYERS TO WATCH</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Player</th>
+                                <th>Country</th>
+                                <th>Position</th>
+                                <th>Goals</th>
+                                <th>Rating</th>
+                                <th>Why They Matter</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Lionel Messi</strong></td>
+                                <td>Argentina</td>
+                                <td>Forward</td>
+                                <td>20</td>
+                                <td>96</td>
+                                <td>Tournament's highest-rated player. Creates magic with the ball. Deciding matches through skill.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kylian Mbappe</strong></td>
+                                <td>France</td>
+                                <td>Forward</td>
+                                <td>22</td>
+                                <td>95</td>
+                                <td>Fastest rising superstar. Exceptional speed. Can change games in seconds with pure pace.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Erling Haaland</strong></td>
+                                <td>Norway</td>
+                                <td>Forward</td>
+                                <td>25</td>
+                                <td>94</td>
+                                <td>Most prolific goal-scorer in tournament. Unstoppable finisher when he gets chances.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Jude Bellingham</strong></td>
+                                <td>England</td>
+                                <td>Midfielder</td>
+                                <td>10</td>
+                                <td>91</td>
+                                <td>Young English talent. Controls games in midfield. One to watch for the future of football.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cristiano Ronaldo</strong></td>
+                                <td>Portugal</td>
+                                <td>Forward</td>
+                                <td>18</td>
+                                <td>94</td>
+                                <td>Legendary veteran. Still delivering elite performances. Experience and leadership invaluable.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- STAGE 2: FOOTBALL IQ QUIZ -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="emoji">📚</span>
+                    STAGE 2: FOOTBALL IQ QUIZ
+                </div>
+
+                <p style="margin-bottom: 20px; color: #666;">Since you indicated "I know almost nothing" about football, this quiz is designed to test your beginner-level understanding with simple, clear questions. Answer all 5 questions below:</p>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">
+                        <h4>Question 1: How long is a standard football match?</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="a"> A) 60 minutes
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="b"> B) 90 minutes
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="c"> C) 120 minutes
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="d"> D) 45 minutes
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>Question 2: What is the position of a player who guards the goal?</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="a"> A) Striker
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="b"> B) Midfielder
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="c"> C) Goalkeeper
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="d"> D) Defender
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>Question 3: How many teams participate in the FIFA World Cup group stage (before 2026)?</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="a"> A) 16 teams
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="b"> B) 32 teams
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="c"> C) 48 teams
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="d"> D) 64 teams
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>Question 4: Which country won the most recent World Cup (2022)?</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="q4" value="a"> A) France
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q4" value="b"> B) Brazil
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q4" value="c"> C) Argentina
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q4" value="d"> D) Germany
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>Question 5: What does a referee do if a player commits a serious foul?</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="q5" value="a"> A) Blows whistle and awards a free kick
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q5" value="b"> B) Shows a yellow or red card
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q5" value="c"> C) Stops the game permanently
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q5" value="d"> D) Gives the other team extra time
+                        </label>
+                    </div>
+
+                    <button class="btn" onclick="calculateQuizScore()">📊 Calculate My Score</button>
+                    <div id="quiz-error"></div>
+                </div>
+
+                <div id="quiz-results" style="display: none; margin-top: 30px;">
+                    <div class="score-display">
+                        <h3 id="final-score">0/100</h3>
+                        <p id="classification">Football Beginner</p>
+                    </div>
+
+                    <div class="key-insights">
+                        <h4>📊 Your Assessment</h4>
+                        <div id="strengths"></div>
+                        <div id="weaknesses" style="margin-top: 15px;"></div>
+                    </div>
+
+                    <div style="background: #f0f7ff; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <p style="color: #555; line-height: 1.8;"><strong>✓ Great Start!</strong> You've taken the first step in understanding football. Focus on learning the basic positions (Goalkeeper, Defenders, Midfielders, Forwards) and watch how professional matches unfold. As you watch the 2026 World Cup, you'll naturally pick up more knowledge!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STAGE 3: MESSI VS RONALDO PERSONALITY MATCH -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="emoji">🧠</span>
+                    STAGE 3: MESSI VS RONALDO PERSONALITY MATCH
+                </div>
+
+                <p style="margin-bottom: 30px; color: #666;">Answer these 10 questions about your personality, work style, and approach to competition. Rate each statement from 1 (Strongly Disagree) to 5 (Strongly Agree):</p>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">
+                        <h4>1. I'm highly ambitious and want to be the very best at what I do</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="p1" value="1"> 1 - Strongly Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p1" value="2"> 2 - Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p1" value="3"> 3 - Neutral
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p1" value="4"> 4 - Agree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p1" value="5"> 5 - Strongly Agree
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>2. I'm very disciplined and follow a strict routine or plan</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="p2" value="1"> 1 - Strongly Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p2" value="2"> 2 - Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p2" value="3"> 3 - Neutral
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p2" value="4"> 4 - Agree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p2" value="5"> 5 - Strongly Agree
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>3. I naturally take charge and lead others</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="p3" value="1"> 1 - Strongly Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p3" value="2"> 2 - Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p3" value="3"> 3 - Neutral
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p3" value="4"> 4 - Agree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p3" value="5"> 5 - Strongly Agree
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>4. I prefer working with others and believe teamwork is more important than individual glory</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="p4" value="1"> 1 - Strongly Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p4" value="2"> 2 - Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p4" value="3"> 3 - Neutral
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p4" value="4"> 4 - Agree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p4" value="5"> 5 - Strongly Agree
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>5. I'm creative and like to solve problems in unconventional ways</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="p5" value="1"> 1 - Strongly Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p5" value="2"> 2 - Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p5" value="3"> 3 - Neutral
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p5" value="4"> 4 - Agree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p5" value="5"> 5 - Strongly Agree
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>6. I'm extremely competitive and hate losing</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="p6" value="1"> 1 - Strongly Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p6" value="2"> 2 - Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p6" value="3"> 3 - Neutral
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p6" value="4"> 4 - Agree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p6" value="5"> 5 - Strongly Agree
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>7. I'm confident in my abilities, even when facing difficult challenges</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="p7" value="1"> 1 - Strongly Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p7" value="2"> 2 - Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p7" value="3"> 3 - Neutral
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p7" value="4"> 4 - Agree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p7" value="5"> 5 - Strongly Agree
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>8. I work extremely hard and dedicate myself fully to my goals</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="p8" value="1"> 1 - Strongly Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p8" value="2"> 2 - Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p8" value="3"> 3 - Neutral
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p8" value="4"> 4 - Agree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p8" value="5"> 5 - Strongly Agree
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>9. I adapt my approach based on feedback and learn continuously</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="p9" value="1"> 1 - Strongly Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p9" value="2"> 2 - Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p9" value="3"> 3 - Neutral
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p9" value="4"> 4 - Agree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p9" value="5"> 5 - Strongly Agree
+                        </label>
+                    </div>
+
+                    <div class="quiz-question">
+                        <h4>10. Under pressure, I perform my best and rise to big challenges</h4>
+                        <label class="quiz-option">
+                            <input type="radio" name="p10" value="1"> 1 - Strongly Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p10" value="2"> 2 - Disagree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p10" value="3"> 3 - Neutral
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p10" value="4"> 4 - Agree
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="p10" value="5"> 5 - Strongly Agree
+                        </label>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="calculatePersonalityMatch()">⚡ Calculate My Match</button>
+                <div id="personality-error"></div>
+
+                <div id="personality-results" style="display: none; margin-top: 30px;">
+                    <div class="personality-match">
+                        <div class="personality-box">
+                            <h4>⚪ Lionel Messi Match</h4>
+                            <div class="match-score" id="messi-score">0%</div>
+                            <p style="color: #666; margin-bottom: 15px;">Creative, team-oriented, adaptive playmaker who leads through quiet excellence.</p>
+                            <div class="personality-traits">
+                                <strong>Messi Traits:</strong>
+                                <ul>
+                                    <li>🎯 Creative problem-solver</li>
+                                    <li>👥 Team player (playmaking assists)</li>
+                                    <li>🧠 Calm and composed under pressure</li>
+                                    <li>📈 Continuously adapts game</li>
+                                    <li>🏅 Leads by example (quiet leader)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="personality-box">
+                            <h4>⚫ Cristiano Ronaldo Match</h4>
+                            <div class="match-score" id="ronaldo-score">0%</div>
+                            <p style="color: #666; margin-bottom: 15px;">Disciplined, ambitious, competitive athlete who leads through vocal intensity.</p>
+                            <div class="personality-traits">
+                                <strong>Ronaldo Traits:</strong>
+                                <ul>
+                                    <li>💪 Exceptional work ethic</li>
+                                    <li>🎯 Single-minded ambition</li>
+                                    <li>🔥 Ultra-competitive mindset</li>
+                                    <li>🗣️ Vocal leader and motivator</li>
+                                    <li>📊 Results-focused individual</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="archetype-result"></div>
+
+                    <div class="recommendations">
+                        <div class="recommendation-item">
+                            <h5>🌟 Player to Watch</h5>
+                            <p id="rec-player">-</p>
+                        </div>
+                        <div class="recommendation-item">
+                            <h5>⚽ Club Style</h5>
+                            <p id="rec-club">-</p>
+                        </div>
+                        <div class="recommendation-item">
+                            <h5>🏴 National Team</h5>
+                            <p id="rec-team">-</p>
+                        </div>
+                        <div class="recommendation-item">
+                            <h5>🏆 Rivalry to Watch</h5>
+                            <p id="rec-rivalry">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FINAL PROFILE -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="emoji">📋</span>
+                    YOUR FOOTBALL INTELLIGENCE PROFILE
+                </div>
+
+                <div id="final-profile" style="display: none;">
+                    <div class="profile-section">
+                        <div class="profile-title">🏆 World Cup 2026 Prediction Summary</div>
+                        <div class="profile-content">
+                            <strong>Winner:</strong> Argentina (92% confidence) - Led by Lionel Messi's brilliance and ranked #1 globally<br><br>
+                            <strong>Runner-Up:</strong> France (88% confidence) - Young superstar Kylian Mbappe carrying the torch for recent champions<br><br>
+                            <strong>Dark Horse:</strong> Germany (72% confidence) - Dominant group stage (7-1 victory) with historical tournament strength
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <div class="profile-title">📊 Your Football Awareness Assessment</div>
+                        <div class="profile-content">
+                            <strong>Score:</strong> <span id="profile-quiz-score">-</span>/100<br>
+                            <strong>Classification:</strong> <span id="profile-classification">-</span><br><br>
+                            <strong>Assessment:</strong> You're building your football knowledge from the ground up. The 2026 World Cup is the perfect opportunity to learn by watching matches. Focus on observing how different positions work together and you'll quickly develop deeper understanding.
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <div class="profile-title">🧠 Your Personality Archetype</div>
+                        <div class="profile-content">
+                            <strong>Archetype:</strong> <span id="profile-archetype">-</span><br>
+                            <strong>Description:</strong> <span id="profile-archetype-desc">-</span><br><br>
+                            <strong>Key Traits:</strong> <span id="profile-archetype-traits">-</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <div class="profile-title">⚡ Messi vs Ronaldo Personality Match</div>
+                        <div class="profile-content">
+                            <strong>Messi Compatibility:</strong> <span id="profile-messi">-</span>%<br>
+                            <strong>Ronaldo Compatibility:</strong> <span id="profile-ronaldo">-</span>%<br><br>
+                            <strong>Your Match:</strong> <span id="profile-match-desc">-</span>
+                        </div>
+                    </div>
+
+                    <div class="key-insights">
+                        <h4>💡 KEY INSIGHTS & RECOMMENDATIONS</h4>
+                        <div class="insight-item">
+                            <strong>🎬 Watch These Matches:</strong> Focus on Argentina vs France matchups to see the clash between creative teamplay (Messi) and athletic intensity (Mbappe). Also watch Germany's knockout stage games to see if their dominant form continues.
+                        </div>
+                        <div class="insight-item">
+                            <strong>👥 Follow These Players:</strong> Lionel Messi, Kylian Mbappe, Erling Haaland, and Jude Bellingham. These four represent different styles of modern football that will help you understand the game's evolution.
+                        </div>
+                        <div class="insight-item">
+                            <strong>📚 Learn the Positions:</strong> Start by understanding Goalkeeper, Defenders, Midfielders, and Forwards. Watch how they interact during matches. This foundation will make all future football viewing more enjoyable.
+                        </div>
+                        <div class="insight-item">
+                            <strong>🔍 Compare Styles:</strong> Argentina plays smooth, passing-oriented football while France relies on speed and physicality. Germany mixes both. Observing these differences will deepen your understanding of tactical variation.
+                        </div>
+                        <div class="insight-item">
+                            <strong>🌍 Your Next Steps:</strong> Watch the 2026 World Cup knockout stages with this analysis. Your knowledge will grow exponentially as you see these teams and players perform under tournament pressure. After the tournament, you'll naturally move from "almost nothing" to "casual follower" knowledge level.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Football Intelligence Hub</strong> | World Cup 2026 Analysis</p>
+            <p>Data source: ABTalks World Cup Intelligence Master (June 17, 2026)</p>
+            <p style="font-size: 0.9em; margin-top: 15px;">Analysis tailored for beginner-level football knowledge | All predictions based on historical performance and current form data</p>
+        </div>
+    </div>
+
+    <script>
+        function calculateQuizScore() {
+            const answers = {
+                q1: 'b', // 90 minutes
+                q2: 'c', // Goalkeeper
+                q3: 'b', // 32 teams
+                q4: 'c', // Argentina
+                q5: 'b'  // Yellow or red card
+            };
+
+            let errorMsg = document.getElementById('quiz-error');
+            errorMsg.innerHTML = '';
+
+            let score = 0;
+            let allAnswered = true;
+
+            for (let i = 1; i <= 5; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (!selected) {
+                    allAnswered = false;
+                    break;
+                }
+                if (selected.value === answers[`q${i}`]) {
+                    score++;
+                }
+            }
+
+            if (!allAnswered) {
+                errorMsg.innerHTML = '<div class="error-message">⚠️ Please answer all 5 questions before calculating your score!</div>';
+                return;
+            }
+
+            const scorePercentage = Math.round((score / 5) * 100);
+            let classification = 'Football Beginner';
+
+            if (scorePercentage >= 80) {
+                classification = 'Casual Viewer';
+            } else if (scorePercentage >= 60) {
+                classification = 'Football Follower';
+            }
+
+            document.getElementById('final-score').textContent = scorePercentage + '/100';
+            document.getElementById('classification').textContent = classification;
+
+            const strengths = document.getElementById('strengths');
+            const weaknesses = document.getElementById('weaknesses');
+
+            if (scorePercentage >= 80) {
+                strengths.innerHTML = '<div class="insight-item"><strong>✓ Strengths:</strong> You have solid grasp of basic football concepts. You understand match duration, key positions, and tournament structure.</div>';
+                weaknesses.innerHTML = '<div class="insight-item" style="margin-top: 10px;"><strong>⚡ Next Level:</strong> Build on this foundation by learning tactical formations (4-4-2, 4-3-3) and understanding how different teams set up their strategies.</div>';
+            } else if (scorePercentage >= 60) {
+                strengths.innerHTML = '<div class="insight-item"><strong>✓ Strengths:</strong> You know some fundamentals. You\'re getting familiar with key aspects of the game.</div>';
+                weaknesses.innerHTML = '<div class="insight-item" style="margin-top: 10px;"><strong>⚡ Gaps to Fill:</strong> Focus on learning: match duration, all player positions, team structure, and how the World Cup tournament is organized. These are foundational!</div>';
+            } else {
+                strengths.innerHTML = '<div class="insight-item"><strong>✓ Strengths:</strong> You\'re taking the first step! This is a great starting point.</div>';
+                weaknesses.innerHTML = '<div class="insight-item" style="margin-top: 10px;"><strong>⚡ Focus Areas:</strong> Learn the 4 main positions (Goalkeeper, Defender, Midfielder, Forward). Watch a full match and identify players in each position. This will transform your understanding!</div>';
+            }
+
+            window.quizScore = scorePercentage;
+            window.quizClassification = classification;
+
+            document.getElementById('quiz-results').style.display = 'block';
+            window.scrollTo(0, document.getElementById('quiz-results').offsetTop - 100);
+        }
+
+        function calculatePersonalityMatch() {
+            let errorMsg = document.getElementById('personality-error');
+            errorMsg.innerHTML = '';
+
+            let allAnswered = true;
+            for (let i = 1; i <= 10; i++) {
+                const selected = document.querySelector(`input[name="p${i}"]:checked`);
+                if (!selected) {
+                    allAnswered = false;
+                    break;
+                }
+            }
+
+            if (!allAnswered) {
+                errorMsg.innerHTML = '<div class="error-message">⚠️ Please answer all 10 questions before calculating your match!</div>';
+                return;
+            }
+
+            let messiScore = 0;
+            let ronaldoScore = 0;
+
+            const responses = [];
+            for (let i = 1; i <= 10; i++) {
+                const selected = document.querySelector(`input[name="p${i}"]:checked`);
+                responses.push(selected ? parseInt(selected.value) : 0);
+            }
+
+            // Q1: Ambition - Ronaldo strength
+            ronaldoScore += responses[0] * 1.2;
+            messiScore += (6 - responses[0]) * 0.5;
+
+            // Q2: Discipline - Ronaldo strength
+            ronaldoScore += responses[1] * 1.3;
+            messiScore += (6 - responses[1]) * 0.4;
+
+            // Q3: Leadership - Ronaldo vocal, Messi quiet
+            ronaldoScore += responses[2] * 1.1;
+            messiScore += (6 - responses[2]) * 0.6;
+
+            // Q4: Teamwork - Messi strength
+            messiScore += responses[3] * 1.4;
+            ronaldoScore += (6 - responses[3]) * 0.3;
+
+            // Q5: Creativity - Messi strength
+            messiScore += responses[4] * 1.3;
+            ronaldoScore += (6 - responses[4]) * 0.3;
+
+            // Q6: Competitiveness - Ronaldo strength
+            ronaldoScore += responses[5] * 1.2;
+            messiScore += (6 - responses[5]) * 0.5;
+
+            // Q7: Confidence - Both strong
+            ronaldoScore += responses[6] * 0.9;
+            messiScore += responses[6] * 0.8;
+
+            // Q8: Work Ethic - Ronaldo strength
+            ronaldoScore += responses[7] * 1.2;
+            messiScore += responses[7] * 0.8;
+
+            // Q9: Adaptability/Learning - Messi strength
+            messiScore += responses[8] * 1.2;
+            ronaldoScore += responses[8] * 0.6;
+
+            // Q10: Big Match Performance - Both
+            ronaldoScore += responses[9] * 1.1;
+            messiScore += responses[9] * 1.0;
+
+            messiScore = Math.min(100, Math.round(messiScore / 6.5));
+            ronaldoScore = Math.min(100, Math.round(ronaldoScore / 6.8));
+
+            // Ensure scores add up reasonably
+            if (messiScore + ronaldoScore > 150) {
+                messiScore = Math.round(messiScore * 0.9);
+                ronaldoScore = Math.round(ronaldoScore * 0.9);
+            }
+
+            document.getElementById('messi-score').textContent = messiScore + '%';
+            document.getElementById('ronaldo-score').textContent = ronaldoScore + '%';
+
+            // Determine archetype based on scores
+            let archetype = 'Balanced Performer';
+            let archetypeDesc = 'You blend elements of both creative finesse and competitive drive, adapting your approach based on circumstances.';
+            let archetypeTraits = 'Versatile, adaptable, balanced approach to goals and achievements';
+
+            if (messiScore > ronaldoScore + 15) {
+                archetype = 'Creative Playmaker';
+                archetypeDesc = 'You solve problems creatively and prefer teamwork over individual glory. Like Messi, you adapt to situations and lead quietly through excellence. Your strength is seeing what others miss and creating opportunities for those around you.';
+                archetypeTraits = 'Creative, adaptable, team-focused, calm under pressure, humble leader';
+            } else if (ronaldoScore > messiScore + 15) {
+                archetype = 'Relentless Competitor';
+                archetypeDesc = 'You\'re driven by ambition and competitive fire. Like Ronaldo, you set impossibly high standards and work tirelessly to achieve them. You lead vocally and motivate others through your intensity and dedication.';
+                archetypeTraits = 'Ambitious, disciplined, ultra-competitive, hard-working, vocal leader';
+            } else if (messiScore > ronaldoScore && messiScore > 60) {
+                archetype = 'Tactical Visionary';
+                archetypeDesc = 'You combine creative intelligence with strong work ethic. You understand the bigger picture and adapt your approach based on circumstances. You\'re both thoughtful and driven.';
+                archetypeTraits = 'Strategic thinker, adaptable, creative, dedicated, collaborative';
+            } else if (ronaldoScore > messiScore && ronaldoScore > 60) {
+                archetype = 'Consistent Performer';
+                archetypeDesc = 'You have strong discipline and competitive spirit, but you also value effectiveness over flashiness. You deliver results through consistent effort and focus on what works.';
+                archetypeTraits = 'Reliable, disciplined, ambitious, focused, results-oriented';
+            }
+
+            let recommendations = '';
+            if (messiScore > ronaldoScore) {
+                recommendations = `
+                    <div class="archetype-box" style="background: linear-gradient(135deg, #74b9ff 0%, #a29bfe 100%); border-left-color: #0984e3;">
+                        <h4 style="color: #0984e3;">Your Personality Profile: ${archetype}</h4>
+                        <p>${archetypeDesc}</p>
+                        <p><strong>Key Traits:</strong> ${archetypeTraits}</p>
+                        <p style="margin-top: 10px;"><strong>Like Messi:</strong> You're ${messiScore}% compatible with his creative, team-oriented approach. You likely prefer elegant solutions and building up those around you.</p>
+                    </div>
+                `;
+            } else {
+                recommendations = `
+                    <div class="archetype-box" style="background: linear-gradient(135deg, #ff7675 0%, #fdcb6e 100%); border-left-color: #d63031;">
+                        <h4 style="color: #d63031;">Your Personality Profile: ${archetype}</h4>
+                        <p>${archetypeDesc}</p>
+                        <p><strong>Key Traits:</strong> ${archetypeTraits}</p>
+                        <p style="margin-top: 10px;"><strong>Like Ronaldo:</strong> You're ${ronaldoScore}% compatible with his ambitious, competitive approach. You likely drive hard for excellence and inspire others through intensity.</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('archetype-result').innerHTML = recommendations;
+
+            // Set recommendations based on match
+            if (messiScore > ronaldoScore) {
+                document.getElementById('rec-player').textContent = 'Lionel Messi';
+                document.getElementById('rec-club').textContent = 'Barcelona / Paris';
+                document.getElementById('rec-team').textContent = 'Argentina';
+                document.getElementById('rec-rivalry').textContent = 'Messi vs Physics';
+            } else {
+                document.getElementById('rec-player').textContent = 'Cristiano Ronaldo';
+                document.getElementById('rec-club').textContent = 'Manchester United';
+                document.getElementById('rec-team').textContent = 'Portugal';
+                document.getElementById('rec-rivalry').textContent = 'Ronaldo vs Age';
+            }
+
+            // Store for final profile
+            window.messiScore = messiScore;
+            window.ronaldoScore = ronaldoScore;
+            window.archetypeProfile = { archetype, archetypeDesc, archetypeTraits };
+
+            document.getElementById('personality-results').style.display = 'block';
+            showFinalProfile();
+            window.scrollTo(0, document.getElementById('personality-results').offsetTop - 100);
+        }
+
+        function showFinalProfile() {
+            if (window.quizScore !== undefined && window.messiScore !== undefined) {
+                document.getElementById('profile-quiz-score').textContent = window.quizScore;
+                document.getElementById('profile-classification').textContent = window.quizClassification;
+                document.getElementById('profile-messi').textContent = window.messiScore;
+                document.getElementById('profile-ronaldo').textContent = window.ronaldoScore;
+
+                if (window.messiScore > window.ronaldoScore) {
+                    document.getElementById('profile-match-desc').textContent = 'You\'re predominantly a Creative Playmaker with Messi-like qualities of adaptability, teamwork, and quiet leadership through excellence.';
+                } else {
+                    document.getElementById('profile-match-desc').textContent = 'You\'re predominantly a Relentless Competitor with Ronaldo-like qualities of ambition, discipline, and vocal leadership through intensity.';
+                }
+
+                document.getElementById('profile-archetype').textContent = window.archetypeProfile.archetype;
+                document.getElementById('profile-archetype-desc').textContent = window.archetypeProfile.archetypeDesc;
+                document.getElementById('profile-archetype-traits').textContent = window.archetypeProfile.archetypeTraits;
+
+                document.getElementById('final-profile').style.display = 'block';
+                window.scrollTo(0, document.getElementById('final-profile').offsetTop - 100);
+            }
+        }
+    </script>
+</body>
+</html>
