@@ -1,0 +1,743 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --void:#0A0D12;
+  --surface:#12161D;
+  --surface-2:#181E27;
+  --line:#232A36;
+  --line-soft:#1A2029;
+  --ink:#ECEFF4;
+  --mist:#8B95A7;
+  --mist-dim:#5C6679;
+  --signal:#3FE0C5;
+  --signal-bg:rgba(63,224,197,0.10);
+  --signal-text:#7FF0DD;
+  --amber:#F2C94C;
+  --amber-bg:rgba(242,201,76,0.12);
+  --amber-text:#F7D87A;
+  --green:#34D399;
+  --green-bg:rgba(52,211,153,0.12);
+  --green-text:#6EE7B7;
+  --orange:#F2994A;
+  --orange-bg:rgba(242,153,74,0.12);
+  --orange-text:#F7B576;
+  --red:#EB5757;
+  --red-bg:rgba(235,87,87,0.13);
+  --red-text:#F18888;
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+  --radius-lg:16px;
+  --radius-md:10px;
+  --radius-sm:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--void);
+  color:var(--ink);
+  font-family:var(--font-body);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  background-image:radial-gradient(circle at 1px 1px, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size:26px 26px;
+  pointer-events:none;
+  z-index:0;
+}
+.dash{max-width:1180px;margin:0 auto;padding:28px 24px 80px;position:relative;z-index:1;}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;letter-spacing:-0.01em;}
+.mono{font-family:var(--font-mono);}
+a{color:var(--signal);}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;padding-bottom:22px;border-bottom:1px solid var(--line-soft);margin-bottom:28px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-mark{width:34px;height:34px;border-radius:9px;background:var(--signal-bg);border:1px solid rgba(63,224,197,0.35);display:flex;align-items:center;justify-content:center;}
+.brand-mark svg{width:18px;height:18px;}
+.brand-name{font-family:var(--font-display);font-size:17px;font-weight:600;}
+.brand-sub{font-family:var(--font-mono);font-size:11px;color:var(--mist-dim);letter-spacing:0.04em;}
+.topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.scan-chip{display:flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:11.5px;color:var(--mist);background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:99px;}
+.scan-dot{width:6px;height:6px;border-radius:50%;background:var(--signal);box-shadow:0 0 0 3px var(--signal-bg);animation:pulse 2.2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+
+.disclaimer-bar{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--mist-dim);border-radius:var(--radius-md);padding:12px 16px;margin-bottom:32px;font-size:13px;color:var(--mist);}
+.disclaimer-bar b{color:var(--ink);font-weight:500;}
+
+/* ---------- badges ---------- */
+.tag{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.04em;text-transform:uppercase;padding:2.5px 7px;border-radius:5px;white-space:nowrap;}
+.tag-fact{background:var(--signal-bg);color:var(--signal-text);border:1px solid rgba(63,224,197,0.3);}
+.tag-inferred{background:rgba(140,150,170,0.12);color:var(--mist);border:1px solid var(--line);}
+.tag-estimate{background:var(--amber-bg);color:var(--amber-text);border:1px solid rgba(242,201,76,0.3);}
+
+/* ---------- section shell ---------- */
+.section{margin-bottom:48px;}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px;flex-wrap:wrap;}
+.eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--signal);margin-bottom:6px;}
+.section-title{font-size:20px;}
+.section-desc{color:var(--mist);font-size:13.5px;max-width:560px;margin-top:4px;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px;}
+
+/* ---------- hero gauges ---------- */
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+.gauge-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;display:flex;align-items:center;gap:22px;}
+.gauge-wrap{position:relative;width:148px;height:148px;flex:none;}
+.gauge-wrap svg{width:100%;height:100%;transform:rotate(-90deg);}
+.gauge-track{fill:none;stroke:var(--line);stroke-width:13;}
+.gauge-arc{fill:none;stroke-width:13;stroke-linecap:round;transition:stroke-dashoffset 1.3s cubic-bezier(.2,.8,.2,1),stroke 0.6s ease;}
+.gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.gauge-num{font-family:var(--font-mono);font-size:32px;font-weight:600;}
+.gauge-max{font-family:var(--font-mono);font-size:11px;color:var(--mist-dim);margin-top:-2px;}
+.gauge-info{flex:1;min-width:0;}
+.gauge-label{font-size:13px;color:var(--mist);margin-bottom:6px;}
+.band-pill{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:12.5px;font-weight:500;padding:5px 11px;border-radius:99px;margin-bottom:12px;}
+.legend-list{display:flex;flex-direction:column;gap:4px;font-family:var(--font-mono);font-size:11px;color:var(--mist-dim);}
+.legend-list .active{color:var(--ink);}
+
+/* ---------- stat strip ---------- */
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:48px;}
+.stat-card{background:var(--surface-2);border-radius:var(--radius-md);padding:16px 18px;}
+.stat-label{font-size:12px;color:var(--mist);display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.stat-value{font-family:var(--font-mono);font-size:25px;font-weight:600;}
+.stat-sub{font-size:11.5px;color:var(--mist-dim);margin-top:4px;}
+
+/* ---------- heatmap ---------- */
+.heatmap-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius-lg);}
+.heatmap{width:100%;border-collapse:collapse;font-size:12.5px;min-width:680px;}
+.heatmap th,.heatmap td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line-soft);}
+.heatmap thead th{font-family:var(--font-mono);font-size:10.5px;color:var(--mist);text-transform:uppercase;letter-spacing:0.04em;background:var(--surface-2);position:sticky;top:0;}
+.heatmap td.svc{white-space:nowrap;}
+.heatmap td.svc .company{display:block;font-size:10.5px;color:var(--mist-dim);}
+.heatmap tbody tr:hover{background:var(--surface-2);}
+.cell{display:flex;justify-content:center;}
+.cell span{width:20px;height:20px;border-radius:5px;display:block;}
+.heat-low{background:var(--green-bg);border:1px solid rgba(52,211,153,0.3);}
+.heat-med{background:var(--amber-bg);border:1px solid rgba(242,201,76,0.3);}
+.heat-high{background:var(--red-bg);border:1px solid rgba(235,87,87,0.4);}
+.heatmap-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--mist);align-items:center;}
+.heatmap-legend span.sw{width:11px;height:11px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:-1px;}
+
+/* ---------- company ranking ---------- */
+.rank-top{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.rank-row{display:flex;align-items:center;gap:14px;background:var(--surface-2);border-radius:var(--radius-md);padding:13px 16px;}
+.rank-pos{font-family:var(--font-mono);color:var(--mist-dim);font-size:13px;width:18px;}
+.rank-name{font-weight:500;font-size:14px;min-width:175px;}
+.rank-services{font-size:11.5px;color:var(--mist);}
+.rank-bar-wrap{flex:1;height:7px;background:var(--line);border-radius:99px;overflow:hidden;}
+.rank-bar{height:100%;background:var(--signal);border-radius:99px;}
+.rank-count{font-family:var(--font-mono);font-size:13px;color:var(--ink);width:62px;text-align:right;}
+.rank-compact{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.rank-compact-item{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;background:var(--surface-2);border-radius:var(--radius-sm);padding:9px 12px;}
+.rank-compact-item .nm{color:var(--ink);}
+.rank-compact-item .ct{font-family:var(--font-mono);color:var(--mist-dim);}
+
+/* ---------- data matrix ---------- */
+.matrix-grid{display:flex;flex-direction:column;gap:10px;}
+.matrix-row{display:grid;grid-template-columns:170px 1.4fr 90px 110px;gap:16px;align-items:center;background:var(--surface-2);border-radius:var(--radius-md);padding:14px 16px;}
+.matrix-cat{font-weight:500;font-size:13.5px;}
+.matrix-types{font-size:12.5px;color:var(--mist);}
+.matrix-count{font-family:var(--font-mono);font-size:12px;color:var(--mist);text-align:center;}
+.sev{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:var(--font-mono);font-size:11px;padding:5px 10px;border-radius:99px;white-space:nowrap;}
+
+/* ---------- risk radar ---------- */
+.radar-wrap{display:grid;grid-template-columns:340px 1fr;gap:28px;align-items:center;}
+.radar-grid{fill:none;stroke:var(--line);stroke-width:1;}
+.radar-axis{stroke:var(--line-soft);stroke-width:1;}
+.radar-label{font-family:var(--font-mono);font-size:9.5px;fill:var(--mist-dim);}
+.radar-data{fill:rgba(63,224,197,0.16);stroke:var(--signal);stroke-width:2;}
+.radar-side{display:flex;flex-direction:column;gap:9px;}
+.radar-item{display:flex;align-items:center;gap:10px;font-size:12.5px;}
+.radar-item .nm{flex:1;color:var(--mist);}
+.radar-item .vb{width:80px;height:6px;background:var(--line);border-radius:99px;overflow:hidden;}
+.radar-item .vf{height:100%;border-radius:99px;}
+.radar-item .vn{font-family:var(--font-mono);font-size:11.5px;width:26px;text-align:right;color:var(--ink);}
+
+/* ---------- twin profile ---------- */
+.twin-card{display:flex;gap:22px;flex-wrap:wrap;}
+.twin-avatar{width:64px;height:64px;border-radius:50%;flex:none;background:conic-gradient(from 180deg,var(--signal),var(--amber),var(--red),var(--signal));display:flex;align-items:center;justify-content:center;}
+.twin-avatar-inner{width:54px;height:54px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;}
+.twin-list{flex:1;min-width:260px;display:flex;flex-direction:column;gap:11px;}
+.twin-item{display:flex;gap:10px;font-size:13.5px;align-items:flex-start;}
+.twin-item .dot{width:5px;height:5px;border-radius:50%;background:var(--mist-dim);margin-top:8px;flex:none;}
+
+/* ---------- assets ---------- */
+.assets-list{display:flex;flex-direction:column;gap:10px;}
+.asset-row{display:grid;grid-template-columns:30px 1.3fr 1.4fr 110px;gap:16px;align-items:center;background:var(--surface-2);padding:13px 16px;border-radius:var(--radius-md);}
+.asset-rank{font-family:var(--font-mono);color:var(--mist-dim);font-size:13px;}
+.asset-name{font-weight:500;font-size:13.5px;}
+.asset-sources{font-size:11.5px;color:var(--mist-dim);}
+.asset-value{font-size:12px;}
+
+/* ---------- wow insights ---------- */
+.wow-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+.wow-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px 20px;}
+.wow-num{font-family:var(--font-mono);font-size:11px;color:var(--signal);margin-bottom:8px;}
+.wow-title{font-family:var(--font-display);font-size:15px;margin-bottom:6px;}
+.wow-body{font-size:13px;color:var(--mist);}
+
+/* ---------- plan ---------- */
+.plan-list{display:flex;flex-direction:column;gap:10px;}
+.plan-row{display:grid;grid-template-columns:90px 1fr;gap:16px;align-items:flex-start;background:var(--surface-2);padding:14px 16px;border-radius:var(--radius-md);}
+.priority{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:0.04em;padding:4px 9px;border-radius:6px;text-align:center;height:fit-content;}
+.plan-action{font-size:13.5px;font-weight:500;margin-bottom:3px;}
+.plan-why{font-size:12.5px;color:var(--mist);}
+
+/* ---------- simulator ---------- */
+.sim-card{display:grid;grid-template-columns:1fr 230px;gap:28px;align-items:center;}
+.sim-options{display:flex;flex-direction:column;gap:9px;}
+.sim-option{display:flex;align-items:center;gap:12px;background:var(--surface-2);border-radius:var(--radius-md);padding:12px 14px;cursor:pointer;border:1px solid transparent;transition:border-color .2s ease;}
+.sim-option:hover{border-color:var(--line);}
+.sim-option input{width:16px;height:16px;accent-color:var(--signal);flex:none;}
+.sim-option .txt{flex:1;font-size:13px;}
+.sim-option .pts{font-family:var(--font-mono);font-size:11.5px;color:var(--signal);}
+.sim-result{display:flex;flex-direction:column;align-items:center;text-align:center;}
+.sim-note{font-size:11.5px;color:var(--mist-dim);margin-top:14px;line-height:1.5;}
+
+/* ---------- verdict ---------- */
+.verdict-card{background:linear-gradient(180deg,var(--surface) 0%,var(--surface-2) 100%);border:1px solid var(--line);border-radius:var(--radius-lg);padding:30px;}
+.verdict-top{display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin-bottom:18px;}
+.verdict-badge{font-family:var(--font-mono);font-size:13px;padding:7px 14px;border-radius:99px;font-weight:500;}
+.verdict-text{font-size:14.5px;color:var(--mist);max-width:680px;margin-bottom:18px;}
+.verdict-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.verdict-action{font-family:var(--font-mono);font-size:11.5px;background:var(--surface);border:1px solid var(--line);padding:7px 12px;border-radius:99px;color:var(--ink);}
+
+footer.foot{margin-top:50px;padding-top:22px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--mist-dim);text-align:center;}
+
+@media(max-width:880px){
+  .hero{grid-template-columns:1fr;}
+  .stat-strip{grid-template-columns:repeat(2,1fr);}
+  .radar-wrap{grid-template-columns:1fr;}
+  .matrix-row{grid-template-columns:1fr;gap:6px;}
+  .asset-row{grid-template-columns:24px 1fr;}
+  .asset-sources,.asset-value{grid-column:2/3;}
+  .sim-card{grid-template-columns:1fr;}
+  .wow-grid{grid-template-columns:1fr;}
+  .plan-row{grid-template-columns:1fr;}
+  .rank-compact{grid-template-columns:1fr;}
+}
+</style>
+<div class="dash">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#3FE0C5" stroke-width="1.8"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">Footprint Scan</div>
+        <div class="brand-sub">DIGITAL FOOTPRINT &amp; PRIVACY ANALYSIS</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="scan-chip"><span class="scan-dot"></span>Snapshot generated · 21 Jun 2026</div>
+      <span class="tag tag-estimate">Sample dataset</span>
+    </div>
+  </div>
+
+  <div class="disclaimer-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B95A7" stroke-width="1.8" style="flex:none;margin-top:1px"><path d="M12 9v4M12 17h.01M10.3 3.9 2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+    <div><b>This dashboard does not access any private account, device, or database.</b> Every score below is calculated only from the list of apps provided. Items marked <span class="tag tag-estimate" style="vertical-align:1px">estimate</span> are probabilistic inferences about typical behavior, not verified facts about this specific person — treat them as directional, not certain.</div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="gauge-card">
+      <div class="gauge-wrap">
+        <svg viewBox="0 0 148 148">
+          <circle class="gauge-track" cx="74" cy="74" r="64"/>
+          <circle id="fpArc" class="gauge-arc" cx="74" cy="74" r="64" stroke="#F2994A" stroke-dasharray="402.1 402.1" stroke-dashoffset="402.1"/>
+        </svg>
+        <div class="gauge-center">
+          <div class="gauge-num" id="fpNum">0</div>
+          <div class="gauge-max">/ 100</div>
+        </div>
+      </div>
+      <div class="gauge-info">
+        <div class="gauge-label">Digital footprint score</div>
+        <div class="band-pill" style="background:var(--orange-bg);color:var(--orange-text)">🟠 Significant</div>
+        <div class="legend-list">
+          <div>🟢 0–30 Minimal</div>
+          <div>🟡 31–60 Moderate</div>
+          <div class="active">🟠 61–80 Significant</div>
+          <div>🔴 81–100 Extensive</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gauge-card">
+      <div class="gauge-wrap">
+        <svg viewBox="0 0 148 148">
+          <circle class="gauge-track" cx="74" cy="74" r="64"/>
+          <circle id="pvArc" class="gauge-arc" cx="74" cy="74" r="64" stroke="#F2994A" stroke-dasharray="402.1 402.1" stroke-dashoffset="402.1"/>
+        </svg>
+        <div class="gauge-center">
+          <div class="gauge-num" id="pvNum">0</div>
+          <div class="gauge-max">/ 100</div>
+        </div>
+      </div>
+      <div class="gauge-info">
+        <div class="gauge-label">Privacy score</div>
+        <div class="band-pill" style="background:var(--orange-bg);color:var(--orange-text)">🟠 Fair</div>
+        <div class="legend-list">
+          <div>🔴 0–30 Weak</div>
+          <div class="active">🟠 31–60 Fair</div>
+          <div>🟡 61–80 Good</div>
+          <div>🟢 81–100 Strong</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT STRIP -->
+  <div class="stat-strip">
+    <div class="stat-card">
+      <div class="stat-label">Total services used <span class="tag tag-fact">Fact</span></div>
+      <div class="stat-value">15</div>
+      <div class="stat-sub">Across 6 usage categories</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Parent companies <span class="tag tag-inferred">Inferred</span></div>
+      <div class="stat-value">11</div>
+      <div class="stat-sub">From public corporate ownership</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Ecosystem concentration <span class="tag tag-estimate">Estimate</span></div>
+      <div class="stat-value">36<span style="font-size:13px;color:var(--mist-dim)">/100</span></div>
+      <div class="stat-sub">Moderate — Alphabet holds 4 of 15 apps</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tracking surface <span class="tag tag-estimate">Estimate</span></div>
+      <div class="stat-value">81<span style="font-size:13px;color:var(--mist-dim)">/100</span></div>
+      <div class="stat-sub">High — most apps are ad-funded</div>
+    </div>
+  </div>
+
+  <!-- EXPOSURE HEATMAP -->
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Section 03</div>
+        <h2 class="section-title">Exposure heatmap</h2>
+        <div class="section-desc">Estimated likelihood that each service collects data in a given category, based on each app's publicly known category and business model.</div>
+      </div>
+      <span class="tag tag-estimate">All cells estimated</span>
+    </div>
+    <div class="heatmap-scroll">
+      <table class="heatmap">
+        <thead><tr>
+          <th>Service</th><th>Identity</th><th>Social graph</th><th>Location</th><th>Financial</th><th>Media</th><th>Behavioral</th>
+        </tr></thead>
+        <tbody id="heatmapBody"></tbody>
+      </table>
+    </div>
+    <div class="heatmap-legend">
+      <span><span class="sw" style="background:var(--green)"></span>Low likelihood</span>
+      <span><span class="sw" style="background:var(--amber)"></span>Medium likelihood</span>
+      <span><span class="sw" style="background:var(--red)"></span>High likelihood</span>
+    </div>
+  </div>
+
+  <!-- COMPANY EXPOSURE RANKING -->
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Section 04</div>
+        <h2 class="section-title">Company exposure ranking</h2>
+        <div class="section-desc">Parent companies ranked by how many of the 15 services they own. More owned services means more potential to combine data across contexts.</div>
+      </div>
+      <span class="tag tag-inferred">Ownership inferred</span>
+    </div>
+    <div class="card">
+      <div class="rank-top">
+        <div class="rank-row">
+          <span class="rank-pos">01</span>
+          <span class="rank-name">Alphabet (Google)</span>
+          <span class="rank-services">YouTube · Search · Pay · Photos</span>
+          <div class="rank-bar-wrap"><div class="rank-bar" style="width:100%"></div></div>
+          <span class="rank-count">4 / 15</span>
+        </div>
+        <div class="rank-row">
+          <span class="rank-pos">02</span>
+          <span class="rank-name">Meta</span>
+          <span class="rank-services">Instagram · WhatsApp</span>
+          <div class="rank-bar-wrap"><div class="rank-bar" style="width:50%"></div></div>
+          <span class="rank-count">2 / 15</span>
+        </div>
+      </div>
+      <div class="rank-compact">
+        <div class="rank-compact-item"><span class="nm">Snap Inc.</span><span class="ct">1</span></div>
+        <div class="rank-compact-item"><span class="nm">ByteDance</span><span class="ct">1</span></div>
+        <div class="rank-compact-item"><span class="nm">Discord Inc.</span><span class="ct">1</span></div>
+        <div class="rank-compact-item"><span class="nm">Apple</span><span class="ct">1</span></div>
+        <div class="rank-compact-item"><span class="nm">Spotify Technology</span><span class="ct">1</span></div>
+        <div class="rank-compact-item"><span class="nm">Roblox Corporation</span><span class="ct">1</span></div>
+        <div class="rank-compact-item"><span class="nm">Krafton / Tencent Games</span><span class="ct">1</span></div>
+        <div class="rank-compact-item"><span class="nm">Amazon</span><span class="ct">1</span></div>
+        <div class="rank-compact-item"><span class="nm">Meesho</span><span class="ct">1</span></div>
+      </div>
+      <div class="section-desc" style="margin-top:14px">In India, PUBG Mobile's publishing has shifted between Tencent Games and Krafton's Battlegrounds Mobile India over time — ownership listed here reflects the broader franchise, not a confirmed regional build.</div>
+    </div>
+  </div>
+
+  <!-- DATA COLLECTION MATRIX -->
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Section 05</div>
+        <h2 class="section-title">Data collection matrix</h2>
+        <div class="section-desc">Likely data types collected per category, how many of the 15 services typically touch that category, and how sensitive that category is if exposed.</div>
+      </div>
+      <span class="tag tag-estimate">Estimate</span>
+    </div>
+    <div class="matrix-grid" id="matrixGrid"></div>
+  </div>
+
+  <!-- RISK RADAR -->
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Section 06</div>
+        <h2 class="section-title">Risk radar</h2>
+        <div class="section-desc">Seven exposure dimensions, each scored 0–100. Higher means a larger estimated footprint in that dimension, not a confirmed harm.</div>
+      </div>
+      <span class="tag tag-estimate">Estimate</span>
+    </div>
+    <div class="card radar-wrap">
+      <svg id="radarSvg" viewBox="0 0 320 320" style="width:100%;height:auto"></svg>
+      <div class="radar-side" id="radarSide"></div>
+    </div>
+  </div>
+
+  <!-- DIGITAL TWIN PROFILE -->
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Section 07</div>
+        <h2 class="section-title">Digital twin profile</h2>
+        <div class="section-desc">A speculative composite persona built only from general usage patterns associated with this combination of apps. Not a determination about any individual's identity, age, or location.</div>
+      </div>
+      <span class="tag tag-estimate">Estimate</span>
+    </div>
+    <div class="card twin-card">
+      <div class="twin-avatar"><div class="twin-avatar-inner">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B95A7" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div></div>
+      <div class="twin-list">
+        <div class="twin-item"><span class="dot"></span><span>Frequent short-form video and social engagement — Instagram, Snapchat and TikTok suggest regular scrolling and content-sharing habits.</span></div>
+        <div class="twin-item"><span class="dot"></span><span>App mix including Meesho and Google Pay is common among users in the Indian digital market, where both see broad adoption.</span></div>
+        <div class="twin-item"><span class="dot"></span><span>Roblox and PUBG Mobile both appear, which may indicate regular mobile or cross-platform gaming sessions.</span></div>
+        <div class="twin-item"><span class="dot"></span><span>Three separate messaging apps — WhatsApp, iMessage and Discord — could point to communication spread across different social circles or platforms.</span></div>
+        <div class="twin-item"><span class="dot"></span><span>Parallel use of Amazon and Meesho is consistent with comparison shopping across more than one marketplace.</span></div>
+        <div class="twin-item"><span class="dot"></span><span>YouTube and Spotify together suggest routine video and audio media consumption.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOST VALUABLE DATA ASSETS -->
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Section 08</div>
+        <h2 class="section-title">Most valuable data assets</h2>
+        <div class="section-desc">Ranked by how commercially useful this type of data tends to be to advertisers and data brokers in general — not a measure of actual market value for this account.</div>
+      </div>
+      <span class="tag tag-estimate">Estimate</span>
+    </div>
+    <div class="assets-list" id="assetsList"></div>
+  </div>
+
+  <!-- WOW INSIGHTS -->
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Section 09</div>
+        <h2 class="section-title">Wow insights</h2>
+        <div class="section-desc">Notable patterns surfaced from the service list above.</div>
+      </div>
+      <span class="tag tag-estimate">Estimate</span>
+    </div>
+    <div class="wow-grid">
+      <div class="wow-card">
+        <div class="wow-num">01</div>
+        <div class="wow-title">One company touches four parts of daily life</div>
+        <div class="wow-body">Alphabet owns Search, YouTube, Google Pay and Google Photos in this list — meaning a single company could, in principle, link what's searched, watched, bought and photographed.</div>
+      </div>
+      <div class="wow-card">
+        <div class="wow-num">02</div>
+        <div class="wow-title">Messaging spans two very different privacy models</div>
+        <div class="wow-body">WhatsApp and iMessage both default to end-to-end encryption, while Discord's model is different by design — the three apps don't offer equal protection for the same kind of conversation.</div>
+      </div>
+      <div class="wow-card">
+        <div class="wow-num">03</div>
+        <div class="wow-title">Gaming and spending overlap</div>
+        <div class="wow-body">Roblox and PUBG Mobile both commonly involve in-app purchases, so play behavior and payment behavior may already sit inside the same data trail.</div>
+      </div>
+      <div class="wow-card">
+        <div class="wow-num">04</div>
+        <div class="wow-title">11 companies, but one clear cluster</div>
+        <div class="wow-body">15 services map to 11 separate companies — fairly distributed, except for Alphabet's four-app cluster, which carries more combined visibility than any other single company here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVACY IMPROVEMENT PLAN -->
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Section 10</div>
+        <h2 class="section-title">Privacy improvement plan</h2>
+        <div class="section-desc">General, non-binding suggestions. Actual impact depends on settings already in place and isn't guaranteed.</div>
+      </div>
+    </div>
+    <div class="plan-list" id="planList"></div>
+  </div>
+
+  <!-- SIMULATOR -->
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Section 11</div>
+        <h2 class="section-title">Privacy improvement simulator</h2>
+        <div class="section-desc">Check the actions you've taken (or plan to take) to see an estimated effect on the privacy score.</div>
+      </div>
+    </div>
+    <div class="card sim-card">
+      <div class="sim-options" id="simOptions"></div>
+      <div class="sim-result">
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 148 148">
+            <circle class="gauge-track" cx="74" cy="74" r="64"/>
+            <circle id="simArc" class="gauge-arc" cx="74" cy="74" r="64" stroke="#F2994A" stroke-dasharray="402.1 402.1" stroke-dashoffset="249.3"/>
+          </svg>
+          <div class="gauge-center">
+            <div class="gauge-num" id="simNum">38</div>
+            <div class="gauge-max">/ 100</div>
+          </div>
+        </div>
+        <div class="band-pill" id="simBand" style="background:var(--orange-bg);color:var(--orange-text);margin-top:12px">🟠 Fair</div>
+        <div class="sim-note">Even with every action checked, settings alone tend to cap out around the "Good" band — closing the gap to "Strong" usually means using fewer overlapping services, not just adjusting permissions.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL VERDICT -->
+  <div class="section" style="margin-bottom:0">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Section 12</div>
+        <h2 class="section-title">Final verdict</h2>
+      </div>
+    </div>
+    <div class="verdict-card">
+      <div class="verdict-top">
+        <span class="verdict-badge" style="background:var(--orange-bg);color:var(--orange-text)">🟠 Significant footprint</span>
+        <span class="verdict-badge" style="background:var(--orange-bg);color:var(--orange-text)">🟠 Fair privacy posture</span>
+      </div>
+      <div class="verdict-text">This profile shows broad, high-visibility usage across social, messaging, gaming, shopping and finance — concentrated mainly around Alphabet and Meta. None of this is unusual for a multi-app digital life, and nothing here confirms specific personal traits. The clearest, lowest-effort gains come from tightening ad-personalization and permission settings on the handful of apps that touch the most categories.</div>
+      <div class="verdict-actions">
+        <span class="verdict-action">① Limit ad personalization — Google &amp; Meta</span>
+        <span class="verdict-action">② Enable 2FA on Google Pay &amp; shopping apps</span>
+        <span class="verdict-action">③ Audit location &amp; contact permissions</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    Built entirely from the 15 services listed at the top of this report. No private accounts, devices, or third-party databases were accessed to generate this dashboard. Estimates reflect general patterns, not verified facts about any individual.
+  </footer>
+
+</div>
+<script>
+(function(){
+  var C = 2 * Math.PI * 64;
+
+  function bandColor(score, kind){
+    if(kind==='footprint'){
+      if(score<=30) return {c:'var(--green)',bg:'var(--green-bg)',t:'var(--green-text)',l:'🟢 Minimal'};
+      if(score<=60) return {c:'var(--amber)',bg:'var(--amber-bg)',t:'var(--amber-text)',l:'🟡 Moderate'};
+      if(score<=80) return {c:'var(--orange)',bg:'var(--orange-bg)',t:'var(--orange-text)',l:'🟠 Significant'};
+      return {c:'var(--red)',bg:'var(--red-bg)',t:'var(--red-text)',l:'🔴 Extensive'};
+    } else {
+      if(score<=30) return {c:'var(--red)',bg:'var(--red-bg)',t:'var(--red-text)',l:'🔴 Weak'};
+      if(score<=60) return {c:'var(--orange)',bg:'var(--orange-bg)',t:'var(--orange-text)',l:'🟠 Fair'};
+      if(score<=80) return {c:'var(--amber)',bg:'var(--amber-bg)',t:'var(--amber-text)',l:'🟡 Good'};
+      return {c:'var(--green)',bg:'var(--green-bg)',t:'var(--green-text)',l:'🟢 Strong'};
+    }
+  }
+
+  function setGauge(arcId, numId, score, kind){
+    var arc = document.getElementById(arcId);
+    var num = document.getElementById(numId);
+    var b = bandColor(score, kind);
+    var resolved = getComputedStyle(document.documentElement).getPropertyValue(b.c.replace('var(','').replace(')','')) || '';
+    arc.style.stroke = b.c;
+    requestAnimationFrame(function(){
+      arc.style.strokeDashoffset = (C * (1 - score/100)).toFixed(2);
+    });
+    var start = 0, dur = 1200, t0 = null;
+    function step(ts){
+      if(!t0) t0 = ts;
+      var p = Math.min(1,(ts-t0)/dur);
+      num.textContent = Math.round(p*score);
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+    return b;
+  }
+
+  setGauge('fpArc','fpNum',78,'footprint');
+  setGauge('pvArc','pvNum',38,'privacy');
+
+  /* ---------- heatmap ---------- */
+  var services = [
+    ["Instagram","Meta",["h","h","m","l","h","h"]],
+    ["Snapchat","Snap Inc.",["h","h","h","l","h","h"]],
+    ["TikTok","ByteDance",["h","h","h","l","h","h"]],
+    ["YouTube","Alphabet",["m","l","h","l","h","h"]],
+    ["Discord","Discord Inc.",["h","h","l","l","m","m"]],
+    ["WhatsApp","Meta",["h","h","m","l","m","m"]],
+    ["iMessage","Apple",["m","h","l","l","m","l"]],
+    ["Spotify","Spotify Technology",["h","l","m","m","h","h"]],
+    ["Roblox","Roblox Corporation",["h","h","l","h","m","m"]],
+    ["PUBG Mobile","Krafton / Tencent",["h","m","h","h","m","h"]],
+    ["Amazon","Amazon",["h","l","h","h","m","h"]],
+    ["Meesho","Meesho",["h","l","h","h","m","m"]],
+    ["Google Search","Alphabet",["m","l","h","l","l","h"]],
+    ["Google Pay","Alphabet",["h","l","m","h","l","m"]],
+    ["Google Photos","Alphabet",["h","l","h","l","h","m"]]
+  ];
+  var cls = {l:'heat-low', m:'heat-med', h:'heat-high'};
+  var rows = '';
+  services.forEach(function(s){
+    rows += '<tr><td class="svc">'+s[0]+'<span class="company">'+s[1]+'</span></td>';
+    s[2].forEach(function(level){
+      rows += '<td><div class="cell"><span class="'+cls[level]+'"></span></div></td>';
+    });
+    rows += '</tr>';
+  });
+  document.getElementById('heatmapBody').innerHTML = rows;
+
+  /* ---------- data collection matrix ---------- */
+  var matrix = [
+    ["Identity & profile","Name, email or phone, profile photo, age range","14 / 15","Medium","var(--amber-bg)","var(--amber-text)"],
+    ["Social graph & contacts","Friends, followers, synced contacts","9 / 15","Medium–high","var(--orange-bg)","var(--orange-text)"],
+    ["Location","GPS, IP-based location, delivery addresses","10 / 15","High","var(--red-bg)","var(--red-text)"],
+    ["Financial & payments","Card or UPI details, purchase and transaction history","4 / 15","Very high","var(--red-bg)","var(--red-text)"],
+    ["Media & content","Photos, videos, voice messages, captions","11 / 15","Medium","var(--amber-bg)","var(--amber-text)"],
+    ["Behavioral & ad tracking","Watch time, click patterns, device and ad IDs","12 / 15","High","var(--red-bg)","var(--red-text)"]
+  ];
+  var mrows = '';
+  matrix.forEach(function(m){
+    mrows += '<div class="matrix-row"><div class="matrix-cat">'+m[0]+'</div><div class="matrix-types">'+m[1]+'</div><div class="matrix-count">'+m[2]+'</div><div><span class="sev" style="background:'+m[4]+';color:'+m[5]+'">'+m[3]+'</span></div></div>';
+  });
+  document.getElementById('matrixGrid').innerHTML = mrows;
+
+  /* ---------- radar ---------- */
+  var radarLabels = ["Social","Behavioral","Location","Financial","Shopping","Comms","Youth-popular"];
+  var radarValues = [88,82,70,58,60,45,65];
+  (function drawRadar(){
+    var svg = document.getElementById('radarSvg');
+    var cx=160, cy=150, maxR=100, n=radarValues.length;
+    function angle(i){ return (-90 + i*(360/n)) * Math.PI/180; }
+    var html = '';
+    [0.25,0.5,0.75,1].forEach(function(f){
+      var pts=[];
+      for(var i=0;i<n;i++){ var a=angle(i), r=maxR*f; pts.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1)); }
+      html += '<polygon points="'+pts.join(' ')+'" class="radar-grid"/>';
+    });
+    for(var i=0;i<n;i++){
+      var a=angle(i), x2=cx+maxR*Math.cos(a), y2=cy+maxR*Math.sin(a);
+      html += '<line x1="'+cx+'" y1="'+cy+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" class="radar-axis"/>';
+      var lx=cx+(maxR+24)*Math.cos(a), ly=cy+(maxR+24)*Math.sin(a);
+      html += '<text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" class="radar-label" text-anchor="middle">'+radarLabels[i]+'</text>';
+    }
+    var dpts=[];
+    for(var i=0;i<n;i++){ var a=angle(i), r=maxR*(radarValues[i]/100); dpts.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1)); }
+    html += '<polygon points="'+dpts.join(' ')+'" class="radar-data"/>';
+    svg.innerHTML = html;
+  })();
+  (function radarSide(){
+    var html='';
+    radarLabels.forEach(function(lab,i){
+      var v = radarValues[i];
+      var col = v>=75?'var(--red)':v>=55?'var(--orange)':v>=35?'var(--amber)':'var(--green)';
+      html += '<div class="radar-item"><span class="nm">'+lab+'</span><div class="vb"><div class="vf" style="width:'+v+'%;background:'+col+'"></div></div><span class="vn">'+v+'</span></div>';
+    });
+    document.getElementById('radarSide').innerHTML = html;
+  })();
+
+  /* ---------- assets ---------- */
+  var assets = [
+    ["Social graph & interest data","Instagram, TikTok, Snapchat","Very high"],
+    ["Search & intent data","Google Search","Very high"],
+    ["Payment & transaction data","Google Pay","Very high"],
+    ["Location history","Google Photos, Amazon/Meesho delivery, search","High"],
+    ["Communication metadata","WhatsApp, Discord, iMessage","Medium"],
+    ["Shopping & spending patterns","Amazon, Meesho","Medium"],
+    ["Entertainment preferences","Spotify, YouTube","Medium"]
+  ];
+  var arows='';
+  assets.forEach(function(a,i){
+    arows += '<div class="asset-row"><div class="asset-rank">'+String(i+1).padStart(2,'0')+'</div><div class="asset-name">'+a[0]+'</div><div class="asset-sources">'+a[1]+'</div><div class="asset-value"><span class="tag tag-estimate">'+a[2]+'</span></div></div>';
+  });
+  document.getElementById('assetsList').innerHTML = arows;
+
+  /* ---------- plan ---------- */
+  var plan = [
+    ["High","Limit ad personalization on Google and Meta accounts","Both ecosystems combine multiple apps' data for ad targeting by default — turning this off reduces cross-app profiling the most."],
+    ["High","Enable two-factor authentication on Google Pay and shopping apps","Financial and payment-linked accounts carry the highest-sensitivity data in this list."],
+    ["Medium","Audit location, contacts and microphone permissions","Snapchat, TikTok, Discord and PUBG Mobile commonly request these by default, often beyond what's needed."],
+    ["Medium","Review Roblox and gaming privacy or parental-control settings","Gaming platforms often default to public profiles and open chat."],
+    ["Low","Download and review your data export from Google and Meta","Seeing what's actually stored is more reliable than guessing."],
+    ["Low","Consider consolidating overlapping apps","Fewer apps in the same category means fewer copies of the same data circulating."]
+  ];
+  var prows='';
+  var pcol = {High:['var(--red-bg)','var(--red-text)'],Medium:['var(--amber-bg)','var(--amber-text)'],Low:['var(--signal-bg)','var(--signal-text)']};
+  plan.forEach(function(p){
+    prows += '<div class="plan-row"><span class="priority" style="background:'+pcol[p[0]][0]+';color:'+pcol[p[0]][1]+'">'+p[0]+'</span><div><div class="plan-action">'+p[1]+'</div><div class="plan-why">'+p[2]+'</div></div></div>';
+  });
+  document.getElementById('planList').innerHTML = prows;
+
+  /* ---------- simulator ---------- */
+  var simItems = [
+    ["Turn off ad personalization on Google & Meta accounts",8],
+    ["Enable two-factor authentication on financial & shopping apps",8],
+    ["Restrict location permissions on social & gaming apps",6],
+    ["Review Roblox / PUBG Mobile privacy & purchase settings",6],
+    ["Run a data download & review on Google and Meta",6],
+    ["Limit contact/social-graph sharing on WhatsApp, Discord, Snapchat",6]
+  ];
+  var simBase = 38;
+  var srows='';
+  simItems.forEach(function(it,i){
+    srows += '<label class="sim-option"><input type="checkbox" data-pts="'+it[1]+'" id="sim'+i+'"/><span class="txt">'+it[0]+'</span><span class="pts">+'+it[1]+'</span></label>';
+  });
+  document.getElementById('simOptions').innerHTML = srows;
+
+  function recalcSim(){
+    var add = 0;
+    document.querySelectorAll('#simOptions input[type=checkbox]').forEach(function(cb){
+      if(cb.checked) add += parseInt(cb.dataset.pts,10);
+    });
+    var score = Math.min(100, simBase + add);
+    var b = bandColor(score,'privacy');
+    var arc = document.getElementById('simArc');
+    arc.style.stroke = b.c;
+    arc.style.strokeDashoffset = (C * (1 - score/100)).toFixed(2);
+    document.getElementById('simNum').textContent = score;
+    var bandEl = document.getElementById('simBand');
+    bandEl.style.background = b.bg;
+    bandEl.style.color = b.t;
+    bandEl.textContent = b.l;
+  }
+  document.querySelectorAll('#simOptions input[type=checkbox]').forEach(function(cb){
+    cb.addEventListener('change', recalcSim);
+  });
+  recalcSim();
+
+})();
+</script>
