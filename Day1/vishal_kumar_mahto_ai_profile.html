@@ -1,935 +1,783 @@
-
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  .poster {
-    background: #020812;
-    width: 100%;
-    min-height: 900px;
-    font-family: 'Rajdhani', sans-serif;
-    color: #e0f0ff;
-    position: relative;
-    overflow: hidden;
-    padding: 0;
-  }
-
-  .grid-bg {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(0,200,255,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,200,255,0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-  }
-
-  .scan-line {
-    position: absolute; inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      rgba(0,0,0,0.08) 3px,
-      rgba(0,0,0,0.08) 4px
-    );
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .header-bar {
-    position: relative;
-    background: linear-gradient(90deg, #000d1a 0%, #001a2e 50%, #000d1a 100%);
-    border-bottom: 1px solid rgba(0,200,255,0.3);
-    padding: 10px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    z-index: 10;
-  }
-
-  .header-bar .logo-text {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 9px;
-    color: #00c8ff;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-  }
-
-  .header-bar .sys-info {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 8px;
-    color: rgba(0,200,255,0.5);
-    letter-spacing: 1px;
-  }
-
-  .main-layout {
-    display: grid;
-    grid-template-columns: 220px 1fr 200px;
-    grid-template-rows: auto auto auto;
-    gap: 0;
-    padding: 12px;
-    position: relative;
-    z-index: 5;
-  }
-
-  /* LEFT COLUMN */
-  .left-col {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding-right: 10px;
-  }
-
-  .portrait-frame {
-    position: relative;
-    width: 190px;
-    height: 220px;
-    margin: 0 auto;
-  }
-
-  .portrait-frame::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    background: linear-gradient(135deg, #00c8ff, #0050a0, #7000ff, #00c8ff);
-    border-radius: 4px;
-    z-index: -1;
-    animation: borderGlow 3s linear infinite;
-  }
-
-  @keyframes borderGlow {
-    0% { filter: hue-rotate(0deg) brightness(1); }
-    50% { filter: hue-rotate(30deg) brightness(1.3); }
-    100% { filter: hue-rotate(0deg) brightness(1); }
-  }
-
-  .portrait-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    border-radius: 3px;
-    display: block;
-    filter: contrast(1.05) saturate(0.9);
-  }
-
-  .portrait-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      transparent 60%,
-      rgba(2,8,18,0.85) 100%
-    );
-    border-radius: 3px;
-  }
-
-  .corner-tl, .corner-tr, .corner-bl, .corner-br {
-    position: absolute;
-    width: 14px; height: 14px;
-    z-index: 2;
-  }
-  .corner-tl { top: 2px; left: 2px; border-top: 2px solid #00c8ff; border-left: 2px solid #00c8ff; }
-  .corner-tr { top: 2px; right: 2px; border-top: 2px solid #00c8ff; border-right: 2px solid #00c8ff; }
-  .corner-bl { bottom: 2px; left: 2px; border-bottom: 2px solid #00c8ff; border-left: 2px solid #00c8ff; }
-  .corner-br { bottom: 2px; right: 2px; border-bottom: 2px solid #00c8ff; border-right: 2px solid #00c8ff; }
-
-  .scan-bar {
-    position: absolute;
-    left: 0; right: 0;
-    height: 2px;
-    background: rgba(0,200,255,0.6);
-    animation: scan 3s ease-in-out infinite;
-    z-index: 3;
-  }
-
-  @keyframes scan {
-    0% { top: 0; opacity: 1; }
-    100% { top: 100%; opacity: 0.2; }
-  }
-
-  .archetype-badge {
-    background: linear-gradient(135deg, rgba(0,200,255,0.15), rgba(112,0,255,0.15));
-    border: 1px solid rgba(0,200,255,0.4);
-    border-radius: 3px;
-    padding: 8px 10px;
-    text-align: center;
-  }
-
-  .archetype-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 7px;
-    color: rgba(0,200,255,0.6);
-    letter-spacing: 2px;
-    display: block;
-    margin-bottom: 3px;
-  }
-
-  .archetype-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    color: #00c8ff;
-    line-height: 1.3;
-    text-shadow: 0 0 10px rgba(0,200,255,0.5);
-  }
-
-  .panel {
-    background: linear-gradient(135deg, rgba(0,16,40,0.9), rgba(0,8,24,0.95));
-    border: 1px solid rgba(0,200,255,0.2);
-    border-radius: 3px;
-    padding: 8px 10px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .panel::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0,200,255,0.5), transparent);
-  }
-
-  .panel-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 7px;
-    color: rgba(0,200,255,0.7);
-    letter-spacing: 2px;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .panel-title::before {
-    content: '';
-    width: 4px; height: 4px;
-    background: #00c8ff;
-    border-radius: 50%;
-    box-shadow: 0 0 6px #00c8ff;
-    display: inline-block;
-    flex-shrink: 0;
-  }
-
-  .metric-bar {
-    margin-bottom: 6px;
-  }
-
-  .metric-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 9px;
-    color: rgba(200,230,255,0.8);
-    margin-bottom: 3px;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-  }
-
-  .metric-pct {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 9px;
-    color: #00c8ff;
-  }
-
-  .bar-track {
-    height: 4px;
-    background: rgba(0,200,255,0.1);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .bar-fill {
-    height: 100%;
-    border-radius: 2px;
-    position: relative;
-  }
-
-  .bar-fill.focus { width: 94%; background: linear-gradient(90deg, #00c8ff, #0080ff); }
-  .bar-fill.exec { width: 88%; background: linear-gradient(90deg, #7000ff, #00c8ff); }
-  .bar-fill.learn { width: 96%; background: linear-gradient(90deg, #00ff88, #00c8ff); }
-  .bar-fill.impact { width: 91%; background: linear-gradient(90deg, #ff6b00, #ff0088); }
-
-  .trait-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-
-  .tag {
-    font-size: 7px;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    padding: 2px 5px;
-    border-radius: 2px;
-    border: 1px solid rgba(0,200,255,0.3);
-    color: rgba(180,220,255,0.9);
-    background: rgba(0,200,255,0.07);
-  }
-
-  /* CENTER COLUMN */
-  .center-col {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 0 8px;
-  }
-
-  .name-block {
-    position: relative;
-  }
-
-  .ai-title-text {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 8px;
-    color: #00ff88;
-    letter-spacing: 3px;
-    margin-bottom: 3px;
-    display: block;
-  }
-
-  .name-main {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 22px;
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 0 20px rgba(0,200,255,0.4), 0 0 40px rgba(0,200,255,0.2);
-    line-height: 1;
-    letter-spacing: 2px;
-  }
-
-  .name-role {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    color: rgba(0,200,255,0.8);
-    letter-spacing: 3px;
-    margin-top: 4px;
-    text-transform: uppercase;
-  }
-
-  .quote-block {
-    background: linear-gradient(135deg, rgba(0,200,255,0.05), rgba(112,0,255,0.08));
-    border-left: 2px solid #00c8ff;
-    border-radius: 0 3px 3px 0;
-    padding: 8px 12px;
-    margin-top: 4px;
-  }
-
-  .quote-text {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    font-style: italic;
-    color: rgba(220,240,255,0.95);
-    letter-spacing: 0.5px;
-    line-height: 1.4;
-  }
-
-  .center-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
-  .panel-content {
-    font-size: 9px;
-    color: rgba(180,220,255,0.8);
-    line-height: 1.6;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 400;
-  }
-
-  .panel-content li {
-    list-style: none;
-    padding-left: 10px;
-    position: relative;
-    margin-bottom: 1px;
-  }
-
-  .panel-content li::before {
-    content: '▸';
-    position: absolute;
-    left: 0;
-    color: #00c8ff;
-    font-size: 7px;
-    top: 1px;
-  }
-
-  .diff-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 5px;
-    margin-bottom: 4px;
-  }
-
-  .diff-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: #00c8ff;
-    box-shadow: 0 0 6px #00c8ff;
-    margin-top: 2px;
-    flex-shrink: 0;
-  }
-
-  .diff-text {
-    font-size: 9px;
-    color: rgba(200,230,255,0.85);
-    font-family: 'Rajdhani', sans-serif;
-    line-height: 1.4;
-  }
-
-  /* RIGHT COLUMN */
-  .right-col {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding-left: 8px;
-  }
-
-  .mode-badge {
-    background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,200,255,0.1));
-    border: 1px solid rgba(0,255,136,0.4);
-    border-radius: 3px;
-    padding: 8px 10px;
-    text-align: center;
-  }
-
-  .mode-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 7px;
-    color: rgba(0,255,136,0.7);
-    letter-spacing: 2px;
-    display: block;
-    margin-bottom: 4px;
-  }
-
-  .mode-text {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    color: #00ff88;
-    text-shadow: 0 0 10px rgba(0,255,136,0.5);
-    letter-spacing: 1px;
-  }
-
-  .pulse-dot {
-    display: inline-block;
-    width: 6px; height: 6px;
-    background: #00ff88;
-    border-radius: 50%;
-    animation: pulse 1.5s infinite;
-    box-shadow: 0 0 8px #00ff88;
-    vertical-align: middle;
-    margin-right: 5px;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
-  }
-
-  .tech-pill {
-    font-size: 7px;
-    font-family: 'Share Tech Mono', monospace;
-    padding: 2px 5px;
-    border-radius: 2px;
-    border: 1px solid rgba(0,200,255,0.25);
-    color: rgba(0,200,255,0.8);
-    background: rgba(0,200,255,0.05);
-    display: inline-block;
-    margin: 1px;
-    letter-spacing: 0.3px;
-  }
-
-  .tech-pill.highlight {
-    border-color: rgba(112,0,255,0.4);
-    color: rgba(180,120,255,0.9);
-    background: rgba(112,0,255,0.08);
-  }
-
-  .fuel-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 4px;
-  }
-
-  .fuel-icon {
-    font-size: 10px;
-    width: 16px;
-    text-align: center;
-    flex-shrink: 0;
-  }
-
-  .fuel-text {
-    font-size: 8px;
-    color: rgba(200,230,255,0.8);
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 500;
-  }
-
-  /* BOTTOM BAR */
-  .bottom-bar {
-    grid-column: 1 / -1;
-    background: linear-gradient(90deg, rgba(0,8,20,0.95), rgba(0,16,40,0.95));
-    border-top: 1px solid rgba(0,200,255,0.2);
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .traj-item {
-    text-align: center;
-    flex: 1;
-  }
-
-  .traj-year {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 8px;
-    color: #00c8ff;
-    letter-spacing: 1px;
-    display: block;
-    margin-bottom: 2px;
-  }
-
-  .traj-desc {
-    font-size: 7px;
-    color: rgba(180,220,255,0.7);
-    font-family: 'Rajdhani', sans-serif;
-    line-height: 1.3;
-    font-weight: 500;
-  }
-
-  .traj-divider {
-    width: 1px;
-    height: 30px;
-    background: linear-gradient(to bottom, transparent, rgba(0,200,255,0.4), transparent);
-  }
-
-  .footer-bar {
-    background: linear-gradient(90deg, #000d1a, #001020, #000d1a);
-    border-top: 1px solid rgba(0,200,255,0.15);
-    padding: 6px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    z-index: 10;
-  }
-
-  .footer-bar .f-text {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 7px;
-    color: rgba(0,200,255,0.4);
-    letter-spacing: 1px;
-  }
-
-  .hexagon-accent {
-    position: absolute;
-    opacity: 0.04;
-    pointer-events: none;
-  }
-
-  .stat-row {
-    display: flex;
-    gap: 6px;
-    margin-top: 4px;
-  }
-
-  .stat-box {
-    flex: 1;
-    background: rgba(0,200,255,0.05);
-    border: 1px solid rgba(0,200,255,0.15);
-    border-radius: 3px;
-    padding: 4px 5px;
-    text-align: center;
-  }
-
-  .stat-num {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    color: #00c8ff;
-    display: block;
-    line-height: 1;
-  }
-
-  .stat-lbl {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 7px;
-    color: rgba(0,200,255,0.5);
-    letter-spacing: 0.5px;
-    display: block;
-    margin-top: 2px;
-  }
-
-  .elite-steps {
-    counter-reset: steps;
-  }
-
-  .elite-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    margin-bottom: 5px;
-  }
-
-  .step-num {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 9px;
-    font-weight: 700;
-    color: #00c8ff;
-    min-width: 14px;
-    flex-shrink: 0;
-    line-height: 1.4;
-  }
-
-  .step-text {
-    font-size: 8px;
-    color: rgba(180,220,255,0.8);
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 500;
-    line-height: 1.4;
-  }
-
-  .center-full {
-    grid-column: 2 / 3;
-  }
-
-  .glow-line {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0,200,255,0.5), rgba(112,0,255,0.5), transparent);
-    margin: 6px 0;
-  }
-
-  .loc-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 10px;
-    color: rgba(0,200,255,0.7);
-    font-weight: 500;
-    letter-spacing: 1px;
-    margin-top: 3px;
-  }
-
-  .loc-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: #00c8ff;
-    box-shadow: 0 0 6px #00c8ff;
-  }
-</style>
-
-<div class="poster">
-  <div class="grid-bg"></div>
-  <div class="scan-line"></div>
-
-  <svg class="hexagon-accent" width="300" height="300" style="top: -50px; right: -50px;" viewBox="0 0 300 300">
-    <polygon points="150,10 270,75 270,215 150,280 30,215 30,75" fill="none" stroke="#00c8ff" stroke-width="1"/>
-    <polygon points="150,40 240,92 240,196 150,248 60,196 60,92" fill="none" stroke="#00c8ff" stroke-width="0.5"/>
-  </svg>
-
-  <!-- HEADER -->
-  <div class="header-bar">
-    <span class="logo-text">◈ AI PERSONALITY PROFILE // SYSTEM v2.4.1</span>
-    <span class="sys-info">PROFILE_ID: VKM-2025-BACKEND | NODE: INDIA/NOIDA | STATUS: [ACTIVE]</span>
-  </div>
-
-  <!-- MAIN LAYOUT -->
-  <div class="main-layout">
-
-    <!-- LEFT COLUMN -->
-    <div class="left-col">
-
-      <div class="portrait-frame">
-        <img class="portrait-img" src="professional photo.1jpg.jpeg" alt="Vishal Kumar Mahto" />
-        <div class="portrait-overlay"></div>
-        <div class="corner-tl"></div>
-        <div class="corner-tr"></div>
-        <div class="corner-bl"></div>
-        <div class="corner-br"></div>
-        <div class="scan-bar"></div>
-      </div>
-
-      <div class="archetype-badge">
-        <span class="archetype-label">◈ AI ARCHETYPE</span>
-        <div class="archetype-title">THE NEURAL<br>ARCHITECT</div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">PERFORMANCE METRICS</div>
-        <div class="metric-bar">
-          <div class="metric-label"><span>FOCUS</span><span class="metric-pct">94%</span></div>
-          <div class="bar-track"><div class="bar-fill focus"></div></div>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vishal Kumar Mahto | Full-Stack MERN Developer</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Patrick+Hand&display=swap");
+
+    :root {
+      --paper: #fdfbf7;
+      --ink: #2d2d2d;
+      --muted: #e5e0d8;
+      --red: #ff4d4d;
+      --blue: #2d5da1;
+      --note: #fff9c4;
+      --white: #ffffff;
+      --shadow: 4px 4px 0 0 var(--ink);
+      --shadow-lg: 8px 8px 0 0 var(--ink);
+      --radius-wobbly: 255px 18px 225px 20px / 18px 225px 20px 255px;
+      --radius-card: 35px 18px 32px 14px / 16px 36px 18px 30px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--paper);
+      background-image: radial-gradient(var(--muted) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--ink);
+      font-family: "Patrick Hand", cursive;
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    .page {
+      min-height: 100vh;
+      overflow: hidden;
+      padding: 28px 18px 36px;
+      position: relative;
+    }
+
+    .page::before,
+    .page::after {
+      border: 3px dashed rgba(45, 45, 45, 0.18);
+      border-radius: 50%;
+      content: "";
+      height: 220px;
+      position: absolute;
+      width: 220px;
+      z-index: 0;
+    }
+
+    .page::before {
+      right: -90px;
+      top: 80px;
+      transform: rotate(12deg);
+    }
+
+    .page::after {
+      bottom: 80px;
+      left: -120px;
+      transform: rotate(-8deg);
+    }
+
+    .sketchbook {
+      margin: 0 auto;
+      max-width: 1100px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .top-strip {
+      align-items: center;
+      display: flex;
+      gap: 14px;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .stamp,
+    .tag,
+    .chip {
+      border: 2px solid var(--ink);
+      display: inline-flex;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stamp {
+      background: var(--white);
+      border-radius: var(--radius-wobbly);
+      box-shadow: var(--shadow);
+      color: var(--blue);
+      font-family: "Kalam", cursive;
+      font-size: 18px;
+      padding: 11px 18px 9px;
+      transform: rotate(-1.5deg);
+    }
+
+    .note-line {
+      border-bottom: 3px dashed var(--ink);
+      color: rgba(45, 45, 45, 0.72);
+      font-size: 19px;
+      padding-bottom: 4px;
+      transform: rotate(1deg);
+    }
+
+    .hero {
+      align-items: center;
+      display: grid;
+      gap: 34px;
+      grid-template-columns: minmax(260px, 0.82fr) minmax(0, 1.18fr);
+    }
+
+    .portrait-card {
+      background: var(--white);
+      border: 3px solid var(--ink);
+      border-radius: 42px 18px 34px 22px / 20px 42px 18px 36px;
+      box-shadow: var(--shadow-lg);
+      padding: 14px;
+      position: relative;
+      transform: rotate(-1.8deg);
+    }
+
+    .portrait-card::before {
+      background: rgba(229, 224, 216, 0.86);
+      border-left: 2px dashed rgba(45, 45, 45, 0.3);
+      border-right: 2px dashed rgba(45, 45, 45, 0.3);
+      content: "";
+      height: 34px;
+      left: 50%;
+      position: absolute;
+      top: -20px;
+      transform: translateX(-50%) rotate(2deg);
+      width: 118px;
+      z-index: 3;
+    }
+
+    .portrait-wrap {
+      aspect-ratio: 3 / 4;
+      background: var(--muted);
+      border: 3px solid var(--ink);
+      border-radius: 28px 14px 24px 18px / 16px 32px 18px 28px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .portrait-wrap::after {
+      border: 2px dashed rgba(45, 45, 45, 0.28);
+      border-radius: 28px 14px 24px 18px / 16px 32px 18px 28px;
+      content: "";
+      inset: 10px;
+      pointer-events: none;
+      position: absolute;
+    }
+
+    .portrait-img {
+      display: block;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+      width: 100%;
+    }
+
+    .portrait-caption {
+      align-items: center;
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      padding: 12px 4px 2px;
+    }
+
+    .pin {
+      background: var(--red);
+      border: 2px solid var(--ink);
+      border-radius: 999px 860px 930px 780px / 820px 900px 760px 920px;
+      box-shadow: 2px 2px 0 0 var(--ink);
+      height: 20px;
+      width: 20px;
+    }
+
+    .hero-copy {
+      position: relative;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      display: inline-block;
+      font-family: "Kalam", cursive;
+      font-size: 22px;
+      margin-bottom: 8px;
+      transform: rotate(-1deg);
+    }
+
+    h1 {
+      font-family: "Kalam", cursive;
+      font-size: clamp(54px, 8vw, 96px);
+      letter-spacing: 0;
+      line-height: 0.9;
+      margin: 0;
+      max-width: 720px;
+    }
+
+    .bang {
+      color: var(--red);
+      display: inline-block;
+      transform: rotate(11deg);
+    }
+
+    .role {
+      background: var(--note);
+      border: 3px solid var(--ink);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      display: inline-block;
+      font-size: clamp(24px, 3vw, 34px);
+      margin: 20px 0 18px;
+      max-width: 100%;
+      padding: 10px 18px;
+      transform: rotate(1.2deg);
+    }
+
+    .quote {
+      border-left: 4px dashed var(--red);
+      font-size: clamp(24px, 2.8vw, 34px);
+      margin: 0 0 24px;
+      max-width: 690px;
+      padding: 4px 0 4px 18px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .availability {
+      background: var(--white);
+      border: 3px dashed var(--ink);
+      border-radius: 30px 14px 28px 12px / 14px 30px 12px 28px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 0 0 24px;
+      max-width: 680px;
+      padding: 16px;
+      transform: rotate(-0.6deg);
+    }
+
+    .availability strong {
+      color: var(--blue);
+      display: block;
+      font-family: "Kalam", cursive;
+      font-size: 23px;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .button {
+      align-items: center;
+      background: var(--white);
+      border: 3px solid var(--ink);
+      border-radius: var(--radius-wobbly);
+      box-shadow: var(--shadow);
+      color: var(--ink);
+      cursor: pointer;
+      display: inline-flex;
+      font-family: "Patrick Hand", cursive;
+      font-size: 24px;
+      min-height: 52px;
+      padding: 10px 20px 8px;
+      text-decoration: none;
+      transition: transform 100ms ease, box-shadow 100ms ease, background 100ms ease, color 100ms ease;
+    }
+
+    .button:hover {
+      background: var(--red);
+      box-shadow: 2px 2px 0 0 var(--ink);
+      color: var(--white);
+      transform: translate(2px, 2px) rotate(-1deg);
+    }
+
+    .button.secondary {
+      background: var(--muted);
+    }
+
+    .button.secondary:hover {
+      background: var(--blue);
+    }
+
+    .button:active {
+      box-shadow: none;
+      transform: translate(4px, 4px);
+    }
+
+    .scribble-arrow {
+      bottom: -44px;
+      height: 96px;
+      left: 220px;
+      position: absolute;
+      transform: rotate(-8deg);
+      width: 170px;
+    }
+
+    .section {
+      margin-top: 54px;
+    }
+
+    .section-title {
+      align-items: center;
+      display: flex;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      font-family: "Kalam", cursive;
+      font-size: clamp(36px, 5vw, 54px);
+      line-height: 1;
+      margin: 0;
+    }
+
+    .tag {
+      background: var(--note);
+      border-radius: 18px 8px 16px 10px / 10px 18px 8px 16px;
+      box-shadow: 3px 3px 0 0 var(--ink);
+      font-size: 19px;
+      padding: 7px 12px 5px;
+      transform: rotate(-2deg);
+    }
+
+    .grid {
+      display: grid;
+      gap: 22px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+      background: var(--white);
+      border: 3px solid var(--ink);
+      border-radius: var(--radius-card);
+      box-shadow: 4px 4px 0 0 rgba(45, 45, 45, 0.16);
+      min-height: 100%;
+      padding: 22px;
+      position: relative;
+      transition: transform 100ms ease, box-shadow 100ms ease;
+    }
+
+    .card:nth-child(2n) {
+      transform: rotate(1deg);
+    }
+
+    .card:nth-child(2n + 1) {
+      transform: rotate(-1deg);
+    }
+
+    .card:hover {
+      box-shadow: 6px 6px 0 0 rgba(45, 45, 45, 0.24);
+      transform: rotate(0deg) translateY(-2px);
+    }
+
+    .card.tack::before {
+      background: var(--red);
+      border: 2px solid var(--ink);
+      border-radius: 999px 860px 930px 780px / 820px 900px 760px 920px;
+      box-shadow: 2px 2px 0 0 var(--ink);
+      content: "";
+      height: 18px;
+      left: 50%;
+      position: absolute;
+      top: -10px;
+      transform: translateX(-50%);
+      width: 18px;
+    }
+
+    .card.note {
+      background: var(--note);
+    }
+
+    .card h3 {
+      font-family: "Kalam", cursive;
+      font-size: 28px;
+      line-height: 1;
+      margin: 0 0 12px;
+    }
+
+    .list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .list li {
+      margin: 8px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .list li::before {
+      color: var(--red);
+      content: ">";
+      font-family: "Kalam", cursive;
+      left: 0;
+      position: absolute;
+      top: -1px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .contact-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .contact-card {
+      background: var(--white);
+      border: 3px solid var(--ink);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      color: var(--ink);
+      min-width: 0;
+      padding: 18px;
+      text-decoration: none;
+      transition: transform 100ms ease, box-shadow 100ms ease, background 100ms ease;
+    }
+
+    .contact-card:hover {
+      background: var(--note);
+      box-shadow: 2px 2px 0 0 var(--ink);
+      transform: translate(2px, 2px) rotate(-1deg);
+    }
+
+    .contact-card strong {
+      color: var(--blue);
+      display: block;
+      font-family: "Kalam", cursive;
+      font-size: 25px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .contact-card span {
+      overflow-wrap: anywhere;
+    }
+
+    .chip {
+      background: var(--paper);
+      border-radius: var(--radius-wobbly);
+      font-size: 18px;
+      padding: 7px 11px 5px;
+    }
+
+    .chip.blue {
+      color: var(--blue);
+    }
+
+    .chip.red {
+      color: var(--red);
+    }
+
+    .stats {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 54px;
+    }
+
+    .stat {
+      align-items: center;
+      background: var(--white);
+      border: 3px solid var(--ink);
+      border-radius: 49% 51% 44% 56% / 56% 42% 58% 44%;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 132px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .stat strong {
+      color: var(--blue);
+      font-family: "Kalam", cursive;
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .path {
+      background: var(--white);
+      border: 3px dashed var(--ink);
+      border-radius: 34px 16px 30px 12px / 18px 34px 16px 30px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      padding: 22px;
+    }
+
+    .path-step {
+      min-width: 0;
+      text-align: center;
+    }
+
+    .path-step strong {
+      color: var(--red);
+      display: block;
+      font-family: "Kalam", cursive;
+      font-size: 25px;
+    }
+
+    .footer {
+      border-top: 3px dashed var(--ink);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      margin-top: 48px;
+      padding-top: 18px;
+    }
+
+    @media (max-width: 860px) {
+      body {
+        font-size: 19px;
+      }
+
+      .top-strip,
+      .hero {
+        align-items: stretch;
+        grid-template-columns: 1fr;
+      }
+
+      .top-strip {
+        flex-direction: column;
+      }
+
+      .portrait-card {
+        margin: 0 auto;
+        max-width: 420px;
+      }
+
+      .scribble-arrow {
+        display: none;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .availability,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .path {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page {
+        padding-inline: 12px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .button {
+        justify-content: center;
+        width: 100%;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="sketchbook">
+      <header class="top-strip" aria-label="Profile summary">
+        <div class="stamp">Open To Work</div>
+        <div class="note-line">Noida, India / BCA graduate / MERN + AI applications</div>
+      </header>
+
+      <section class="hero" aria-labelledby="profile-title">
+        <figure class="portrait-card">
+          <div class="portrait-wrap">
+            <img class="portrait-img" src="public/profile.jpg" alt="Portrait of Vishal Kumar Mahto">
+          </div>
+          <figcaption class="portrait-caption">
+            <span>Full-Stack MERN Developer</span>
+            <span class="pin" aria-hidden="true"></span>
+          </figcaption>
+        </figure>
+
+        <div class="hero-copy">
+          <span class="eyebrow">BCA Graduate / Internship Completed</span>
+          <h1 id="profile-title">Vishal Kumar Mahto<span class="bang">!</span></h1>
+          <div class="role">Full-Stack Developer / React.js / Node.js / MongoDB / AI Apps</div>
+          <p class="quote">I build responsive web apps, AI-powered tools, landing pages, dashboards, and MERN products that companies can understand, test, and ship.</p>
+          <div class="availability" aria-label="Current availability">
+            <div><strong>Status</strong><span>Open to full-time roles, internships, freelance projects, and startup work.</span></div>
+            <div><strong>Proof</strong><span>Completed Web Developer internship at NoirSane and graduated from IMS Noida.</span></div>
+          </div>
+          <div class="actions">
+            <a class="button" href="#contact">Contact me</a>
+            <a class="button secondary" href="#experience">View experience</a>
+          </div>
+          <svg class="scribble-arrow" viewBox="0 0 170 96" aria-hidden="true">
+            <path d="M8 18 C44 42, 74 12, 118 52 S154 64, 160 44" fill="none" stroke="#2d2d2d" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 8"/>
+            <path d="M146 37 L162 44 L149 57" fill="none" stroke="#2d2d2d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
-        <div class="metric-bar">
-          <div class="metric-label"><span>EXECUTION</span><span class="metric-pct">88%</span></div>
-          <div class="bar-track"><div class="bar-fill exec"></div></div>
-        </div>
-        <div class="metric-bar">
-          <div class="metric-label"><span>LEARNING VELOCITY</span><span class="metric-pct">96%</span></div>
-          <div class="bar-track"><div class="bar-fill learn"></div></div>
-        </div>
-        <div class="metric-bar">
-          <div class="metric-label"><span>IMPACT POTENTIAL</span><span class="metric-pct">91%</span></div>
-          <div class="bar-track"><div class="bar-fill impact"></div></div>
-        </div>
-      </div>
+      </section>
 
-      <div class="panel">
-        <div class="panel-title">PERSONALITY MATRIX</div>
-        <div class="trait-tags">
-          <span class="tag">DEEP THINKER</span>
-          <span class="tag">BUILDER</span>
-          <span class="tag">CURIOUS</span>
-          <span class="tag">RESEARCH-DRIVEN</span>
-          <span class="tag">CONSISTENT</span>
-          <span class="tag">FUTURE-FOCUSED</span>
-          <span class="tag">AMBITIOUS</span>
-          <span class="tag">PROBLEM SOLVER</span>
+      <section class="stats" aria-label="Highlights">
+        <div class="stat"><strong>424</strong><span>GitHub contributions last year</span></div>
+        <div class="stat"><strong>Top 10</strong><span>Exora hackathon</span></div>
+        <div class="stat"><strong>380+</strong><span>Teams competed</span></div>
+        <div class="stat"><strong>62</strong><span>GitHub repositories</span></div>
+      </section>
+
+      <section class="section" id="strengths">
+        <div class="section-title">
+          <h2>Recruiter snapshot</h2>
+          <span class="tag">quick read</span>
         </div>
-      </div>
+        <div class="grid">
+          <article class="card tack">
+            <h3>Role fit</h3>
+            <ul class="list">
+              <li>Full-Stack Developer roles</li>
+              <li>MERN Stack Developer roles</li>
+              <li>Frontend Developer roles</li>
+              <li>AI application development projects</li>
+            </ul>
+          </article>
 
-      <div class="stat-row">
-        <div class="stat-box">
-          <span class="stat-num">374+</span>
-          <span class="stat-lbl">GITHUB</span>
-        </div>
-        <div class="stat-box">
-          <span class="stat-num">TOP 10</span>
-          <span class="stat-lbl">EXORA</span>
-        </div>
-        <div class="stat-box">
-          <span class="stat-num">380+</span>
-          <span class="stat-lbl">TEAMS</span>
-        </div>
-      </div>
+          <article class="card note">
+            <h3>What I build</h3>
+            <ul class="list">
+              <li>Responsive websites and landing pages</li>
+              <li>Dashboards and analytics platforms</li>
+              <li>Authentication, APIs, and databases</li>
+              <li>Firebase and AI-assisted workflows</li>
+            </ul>
+          </article>
 
-    </div>
+          <article class="card tack">
+            <h3>Work style</h3>
+            <ul class="list">
+              <li>Builds publicly and learns fast</li>
+              <li>Strong UI sense with backend thinking</li>
+              <li>Comfortable with AI tools and automation</li>
+              <li>Focused on clean, usable products</li>
+            </ul>
+          </article>
 
-    <!-- CENTER COLUMN -->
-    <div class="center-col">
+          <article class="card">
+            <h3>Education</h3>
+            <ul class="list">
+              <li>Bachelor of Computer Applications</li>
+              <li>IMS Noida, Computer Science</li>
+              <li>Graduation completed in 2026</li>
+              <li>Project-driven learning approach</li>
+            </ul>
+          </article>
 
-      <div class="name-block">
-        <span class="ai-title-text">◈ FULL-STACK AI ENGINEER // BACKEND ARCHITECT</span>
-        <div class="name-main">VISHAL KUMAR</div>
-        <div class="name-main" style="color:#00c8ff; text-shadow: 0 0 30px rgba(0,200,255,0.6);">MAHTO</div>
-        <div class="name-role">Backend Developer • Noir Sane • IMS Noida BCA</div>
-        <div class="loc-badge"><span class="loc-dot"></span>NOIDA, INDIA</div>
-        <div class="glow-line" style="margin-top: 8px;"></div>
-        <div class="quote-block">
-          <div class="quote-text">"I don't wait for the future. I architect it — one system at a time."</div>
-        </div>
-      </div>
+          <article class="card tack" id="experience">
+            <h3>Experience</h3>
+            <ul class="list">
+              <li>Web Developer at NoirSane</li>
+              <li>Completed 10-month internship</li>
+              <li>Worked on React, Firebase, responsive UI, and payment flows</li>
+              <li>Improved landing pages and user experiences</li>
+            </ul>
+          </article>
 
-      <div class="center-grid">
-
-        <div class="panel">
-          <div class="panel-title">AI WORKING STYLE</div>
-          <ul class="panel-content">
-            <li>Systems-first thinking approach</li>
-            <li>Builds before theorizing</li>
-            <li>Deep dives into tech docs</li>
-            <li>Iterative, research-driven cycles</li>
-            <li>Ships to learn, learns to ship</li>
-          </ul>
-        </div>
-
-        <div class="panel">
-          <div class="panel-title">CORE STRENGTHS</div>
-          <ul class="panel-content">
-            <li>Full-stack architecture design</li>
-            <li>Rapid AI integration skills</li>
-            <li>3D/WebGL visual engineering</li>
-            <li>Hackathon-tested execution</li>
-            <li>Cross-domain pattern synthesis</li>
-          </ul>
-        </div>
-
-        <div class="panel">
-          <div class="panel-title">TYPE OF AI USER</div>
-          <ul class="panel-content">
-            <li>Power integrator (Claude, Ollama)</li>
-            <li>Builds AI-first applications</li>
-            <li>Uses Copilot for acceleration</li>
-            <li>Thinks about AI as infrastructure</li>
-            <li>Explores model boundaries daily</li>
-          </ul>
-        </div>
-
-        <div class="panel">
-          <div class="panel-title">GROWTH AREAS</div>
-          <ul class="panel-content">
-            <li>Scaling distributed systems</li>
-            <li>MLOps & model fine-tuning</li>
-            <li>DevOps pipeline mastery</li>
-            <li>Technical writing & blogging</li>
-            <li>Open source leadership</li>
-          </ul>
-        </div>
-
-        <div class="panel">
-          <div class="panel-title">LEARNING & DECISION STYLE</div>
-          <ul class="panel-content">
-            <li>Learn by doing → document later</li>
-            <li>Concept-first, then syntax</li>
-            <li>Data-informed decisions</li>
-            <li>Experiments over opinions</li>
-            <li>Public learning (shares openly)</li>
-          </ul>
-        </div>
-
-        <div class="panel">
-          <div class="panel-title">WHAT MAKES ME DIFFERENT</div>
-          <div>
-            <div class="diff-item">
-              <div class="diff-dot" style="background:#00ff88; box-shadow: 0 0 6px #00ff88;"></div>
-              <div class="diff-text">Combines 3D+AI in the same stack</div>
+          <article class="card">
+            <h3>Tech superpowers</h3>
+            <div class="chips" aria-label="Technology skills">
+              <span class="chip blue">React.js</span>
+              <span class="chip">Node.js</span>
+              <span class="chip">Express.js</span>
+              <span class="chip">MongoDB</span>
+              <span class="chip blue">Next.js</span>
+              <span class="chip">TypeScript</span>
+              <span class="chip">Python</span>
+              <span class="chip">Docker</span>
+              <span class="chip">Firebase</span>
+              <span class="chip red">Tailwind CSS</span>
+              <span class="chip">GSAP</span>
+              <span class="chip">Framer Motion</span>
+              <span class="chip red">Three.js</span>
+              <span class="chip blue">Claude AI</span>
+              <span class="chip">Ollama</span>
+              <span class="chip">GitHub</span>
+              <span class="chip">REST APIs</span>
             </div>
-            <div class="diff-item">
-              <div class="diff-dot" style="background:#7000ff; box-shadow: 0 0 6px #7000ff;"></div>
-              <div class="diff-text">Hackathon-proven under pressure</div>
-            </div>
-            <div class="diff-item">
-              <div class="diff-dot"></div>
-              <div class="diff-text">Builds production systems as a student</div>
-            </div>
-            <div class="diff-item">
-              <div class="diff-dot" style="background:#ff6b00; box-shadow: 0 0 6px #ff6b00;"></div>
-              <div class="diff-text">MHRD Innovation Ambassador</div>
-            </div>
-          </div>
+          </article>
         </div>
+      </section>
 
-      </div>
-
-      <!-- AI Character Description -->
-      <div class="panel">
-        <div class="panel-title">AI CHARACTER DESCRIPTION</div>
-        <div class="panel-content" style="font-size: 9px; line-height: 1.6; color: rgba(200,230,255,0.85);">
-          Vishal is a <strong style="color:#00c8ff;">Neural Architect</strong> — a rare fusion of full-stack engineer and AI integrator who thinks in systems and builds in layers. Operating at the intersection of 3D visualization, backend infrastructure, and AI tooling, he doesn't just write code — he engineers digital experiences. His research-driven mindset means he understands the "why" before the "how", making him a force multiplier in any technical team. Driven by curiosity and shaped by competitive hackathons, he is actively designing his path from developer to founder.
+      <section class="section">
+        <div class="section-title">
+          <h2>Project proof</h2>
+          <span class="tag">built things</span>
         </div>
-      </div>
+        <div class="grid">
+          <article class="card note">
+            <h3>Agentic AI Data Analysis</h3>
+            <p>Schema-first analytics platform concept with dataset upload, KPI generation, dashboards, chart creation, and natural-language questions.</p>
+          </article>
+          <article class="card tack">
+            <h3>CareerVeda 2.0</h3>
+            <p>AI-enabled e-learning platform redesign with student dashboards, roadmaps, AI career coach, resume analyzer, mock interviews, and analytics.</p>
+          </article>
+          <article class="card">
+            <h3>Website redesigns</h3>
+            <p>Premium redesign concepts for salon, chocolate, education, real estate, startup websites, landing pages, and motion-led product experiences.</p>
+          </article>
+        </div>
+      </section>
 
+      <section class="section" id="trajectory">
+        <div class="path">
+          <div class="path-step"><strong>01</strong><span>BCA graduate with practical web development experience</span></div>
+          <div class="path-step"><strong>02</strong><span>Completed Web Developer internship at NoirSane</span></div>
+          <div class="path-step"><strong>03</strong><span>Comfortable across React, Node, MongoDB, Firebase, and APIs</span></div>
+          <div class="path-step"><strong>04</strong><span>Strong interest in AI applications, dashboards, and product design</span></div>
+          <div class="path-step"><strong>05</strong><span>Open to work, freelance, internships, and startup collaborations</span></div>
+        </div>
+      </section>
+
+      <section class="section" id="contact">
+        <div class="section-title">
+          <h2>Contact</h2>
+          <span class="tag">hire / collaborate</span>
+        </div>
+        <div class="contact-grid">
+          <a class="contact-card" href="mailto:vishalkumar.techx@gmail.com">
+            <strong>Email</strong>
+            <span>vishalkumar.techx@gmail.com</span>
+          </a>
+          <a class="contact-card" href="https://github.com/vishalcoder0912">
+            <strong>GitHub</strong>
+            <span>github.com/vishalcoder0912</span>
+          </a>
+          <a class="contact-card" href="https://www.linkedin.com/in/vishal-backend">
+            <strong>LinkedIn</strong>
+            <span>linkedin.com/in/vishal-backend</span>
+          </a>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>Vishal Kumar Mahto / Full-Stack MERN Developer</span>
+        <span>Open to work / internships / freelance / startup collaborations</span>
+      </footer>
     </div>
-
-    <!-- RIGHT COLUMN -->
-    <div class="right-col">
-
-      <div class="mode-badge">
-        <span class="mode-label">◈ CURRENT MODE</span>
-        <div class="mode-text"><span class="pulse-dot"></span>BUILD MODE</div>
-        <div style="font-size: 8px; color: rgba(0,255,136,0.5); font-family: 'Share Tech Mono', monospace; margin-top: 4px; letter-spacing: 1px;">EXECUTION: ACTIVE</div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">TECH SUPERPOWERS</div>
-        <div style="margin-top: 2px;">
-          <span class="tech-pill">React.js</span>
-          <span class="tech-pill">Node.js</span>
-          <span class="tech-pill">Express.js</span>
-          <span class="tech-pill">MongoDB</span>
-          <span class="tech-pill">Python</span>
-          <span class="tech-pill">Docker</span>
-          <span class="tech-pill highlight">Three.js</span>
-          <span class="tech-pill highlight">WebGL</span>
-          <span class="tech-pill highlight">Claude AI</span>
-          <span class="tech-pill highlight">Ollama</span>
-          <span class="tech-pill">JWT Auth</span>
-          <span class="tech-pill">REST APIs</span>
-          <span class="tech-pill">C++</span>
-          <span class="tech-pill">SQL</span>
-          <span class="tech-pill">GitHub</span>
-          <span class="tech-pill highlight">AI Integration</span>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">FUEL SOURCES</div>
-        <div class="fuel-item"><span class="fuel-icon" style="color:#00c8ff;">◈</span><span class="fuel-text">Building things that feel like magic</span></div>
-        <div class="fuel-item"><span class="fuel-icon" style="color:#00ff88;">◉</span><span class="fuel-text">Solving real-world problems with code</span></div>
-        <div class="fuel-item"><span class="fuel-icon" style="color:#7000ff;">◈</span><span class="fuel-text">Late-night deep dives into docs</span></div>
-        <div class="fuel-item"><span class="fuel-icon" style="color:#ff6b00;">◉</span><span class="fuel-text">Hackathon adrenaline rushes</span></div>
-        <div class="fuel-item"><span class="fuel-icon" style="color:#00c8ff;">◈</span><span class="fuel-text">Public learning & community sharing</span></div>
-        <div class="fuel-item"><span class="fuel-icon" style="color:#00ff88;">◉</span><span class="fuel-text">Watching AI breakthroughs unfold</span></div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-title">HOW TO BECOME ELITE</div>
-        <div class="elite-steps">
-          <div class="elite-step">
-            <span class="step-num">01</span>
-            <span class="step-text">Ship one open-source AI project publicly</span>
-          </div>
-          <div class="elite-step">
-            <span class="step-num">02</span>
-            <span class="step-text">Master cloud-native deployment (K8s)</span>
-          </div>
-          <div class="elite-step">
-            <span class="step-num">03</span>
-            <span class="step-text">Build a personal AI research newsletter</span>
-          </div>
-          <div class="elite-step">
-            <span class="step-num">04</span>
-            <span class="step-text">Lead a team of 3+ engineers on a product</span>
-          </div>
-          <div class="elite-step">
-            <span class="step-num">05</span>
-            <span class="step-text">Raise first pre-seed or win a top-tier hackathon</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- BOTTOM TRAJECTORY BAR -->
-    <div class="bottom-bar">
-      <div class="traj-item">
-        <span class="traj-year">2025</span>
-        <div class="traj-desc">Backend Dev<br>@ Noir Sane</div>
-      </div>
-      <div class="traj-divider"></div>
-      <div class="traj-item">
-        <span class="traj-year">2026</span>
-        <div class="traj-desc">Senior Engineer<br>+ AI Products</div>
-      </div>
-      <div class="traj-divider"></div>
-      <div class="traj-item">
-        <span class="traj-year">2027</span>
-        <div class="traj-desc">Tech Lead<br>or Founding Dev</div>
-      </div>
-      <div class="traj-divider"></div>
-      <div class="traj-item">
-        <span class="traj-year">2028</span>
-        <div class="traj-desc">CTO or<br>Founder Track</div>
-      </div>
-      <div class="traj-divider"></div>
-      <div class="traj-item">
-        <span class="traj-year">2030</span>
-        <div class="traj-desc">AI Startup<br>Founder</div>
-      </div>
-      <div class="traj-divider"></div>
-      <div class="traj-item" style="text-align:left; flex: 2; padding-left: 8px;">
-        <span class="traj-year" style="color:#00ff88;">TRAJECTORY</span>
-        <div class="traj-desc" style="color: rgba(0,255,136,0.7);">Neural Architect → AI Founder<br>Building the future of intelligent systems</div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- FOOTER -->
-  <div class="footer-bar">
-    <span class="f-text">◈ GENERATED BY AI BRANDING ENGINE // PROFILE v1.0</span>
-    <span class="f-text">VISHAL KUMAR MAHTO // THE NEURAL ARCHITECT // 2025</span>
-    <span class="f-text">NOIDA, INDIA // BACKEND DEV // AI BUILDER ◈</span>
-  </div>
-
-</div>
+  </main>
+</body>
+</html>

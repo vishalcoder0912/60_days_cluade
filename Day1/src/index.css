@@ -1,0 +1,39 @@
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Patrick+Hand&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink font-body antialiased;
+    background-image: radial-gradient(#e5e0d8 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  ::selection {
+    @apply bg-note text-ink;
+  }
+
+  a,
+  button {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pen focus-visible:ring-offset-4 focus-visible:ring-offset-paper;
+  }
+}
+
+@layer components {
+  .container-sketch {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8;
+  }
+
+  .wavy-underline {
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: #ff4d4d;
+    text-underline-offset: 8px;
+  }
+}
