@@ -10,7 +10,7 @@ export const profile = {
   githubLabel: "github.com/vishalcoder0912",
   linkedin: "https://linkedin.com/in/vishal-backend",
   linkedinLabel: "linkedin.com/in/vishal-backend",
-  image: "/profile.jpg",
+  image: "https://ik.imagekit.io/q7ucn1rfni/portfolio/profile.jpg",
 };
 
 export const snapshot = [
